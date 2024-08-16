@@ -1,4 +1,3 @@
-
 import { useTheme } from "@/context/useTheme";
 
 import {
@@ -21,16 +20,16 @@ const Theme = () => {
             <img
               src="/assets/icons/sun.svg"
               alt="sun"
-              width={22}
-              height={22}
+              width={24}
+              height={24}
               className="active-theme"
             />
           ) : (
             <img
               src="/assets/icons/moon.svg"
               alt="moon"
-              width={22}
-              height={22}
+              width={24}
+              height={24}
               className="active-theme"
             />
           )}
@@ -58,7 +57,11 @@ const Theme = () => {
                 className={`${mode === item.value && "active-theme"}`}
               />
               <p
-                className={`body-semibold text-light-500 ${mode === item.value ? "text-primary-500" : "text-dark100_light900"}`}
+                className={`body-semibold text-light-500 ${
+                  mode === item.value
+                    ? "text-primary-500"
+                    : "text-dark100_light900"
+                }`}
               >
                 {item.label}
               </p>

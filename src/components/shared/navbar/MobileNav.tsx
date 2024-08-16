@@ -7,7 +7,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { sidebarLinks } from "@/constants";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const NavContent = () => {
   const location = useLocation();
@@ -22,8 +22,8 @@ const NavContent = () => {
 
         return (
           <SheetClose asChild key={item.route}>
-            <a
-              href={item.route}
+            <Link
+              to={item.route}
               className={`${
                 isActive
                   ? "primary-gradient rounded-lg text-light-900"
@@ -40,7 +40,7 @@ const NavContent = () => {
               <p className={`${isActive ? "base-bold" : "base-medium"}`}>
                 {item.label}
               </p>
-            </a>
+            </Link>
           </SheetClose>
         );
       })}
@@ -70,7 +70,7 @@ const MobileNav = () => {
         </SheetDescription>
 
         <div className="flex-1 overflow-y-auto">
-          <a href="/" className="flex items-center gap-1">
+          <Link to="/" className="flex items-center gap-1">
             <img
               src="/assets/images/site-logo.svg"
               width={23}
@@ -81,7 +81,7 @@ const MobileNav = () => {
             <p className="h2-bold text-dark100_light900 font-spaceGrotesk">
               Film<span className="text-primary-500">pire</span>
             </p>
-          </a>
+          </Link>
           <div>
             <SheetClose asChild>
               <NavContent />

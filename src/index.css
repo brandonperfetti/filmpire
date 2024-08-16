@@ -132,8 +132,8 @@ body {
 }
 
 .active-theme {
-  filter: invert(20%) sepia(90%) saturate(7500%) hue-rotate(-10deg)
-    brightness(95%) contrast(105%) !important;
+  filter: invert(21%) sepia(100%) saturate(6000%) hue-rotate(-5deg)
+    brightness(90%) contrast(100%) !important;
 }
 
 .light-gradient {
