@@ -1,4 +1,4 @@
-import { SidebarLink } from "@/types";
+import { Category, Genre } from "@/types";
 
 export const themes = [
   { value: "light", label: "Light", icon: "/assets/icons/sun.svg" },
@@ -6,20 +6,50 @@ export const themes = [
   { value: "system", label: "System", icon: "/assets/icons/computer.svg" },
 ];
 
-export const sidebarLinks: SidebarLink[] = [
+export const categories: Category[] = [
   {
-    imgURL: "/assets/icons/home.svg",
-    route: "/",
-    label: "Movies",
+    label: "Popular",
+    value: "popular",
+    icon: "/assets/icons/popcorn.svg",
+    route: "/movies/popular",
   },
   {
-    imgURL: "/assets/icons/users.svg",
-    route: "/actors",
-    label: "Actors",
+    label: "Top Rated",
+    value: "top_rated",
+    icon: "/assets/icons/star.svg",
+    route: "/movies/top-rated",
   },
   {
-    imgURL: "/assets/icons/user.svg",
-    route: "/profile/:id",
-    label: "Profile",
+    label: "Upcoming",
+    value: "upcoming",
+    icon: "/assets/icons/calendar.svg",
+    route: "/movies/upcoming",
+  },
+];
+
+export const genres: Genre[] = [
+  {
+    label: "Action",
+    value: "action",
+    icon: "/assets/icons/bomb.svg",
+    route: "/movies/action",
+  },
+  {
+    label: "Drama",
+    value: "drama",
+    icon: "/assets/icons/drama.svg",
+    route: "/movies/comedy",
+  },
+  {
+    label: "Horror",
+    value: "horror",
+    icon: "/assets/icons/skull.svg",
+    route: "/movies/horror",
+  },
+  {
+    label: "Animation",
+    value: "animation",
+    icon: "/assets/icons/palette.svg",
+    route: "/movies/animation",
   },
 ];
