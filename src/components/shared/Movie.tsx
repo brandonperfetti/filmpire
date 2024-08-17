@@ -1,4 +1,7 @@
 import { MovieProps } from "@/types";
+import { Link } from "react-router-dom";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import Rating from "./Rating";
 
 interface Props {
   movie: MovieProps;
@@ -6,7 +9,31 @@ interface Props {
 }
 
 const Movie = ({ movie, index }: Props) => {
-  return <div className="grid">{movie.title}</div>;
+  const delay = `${index * 250}ms`;
+  return (
+    <div className="animate-grow opacity-0" style={{ animationDelay: delay }}>
+      <Link to={`/movie/${movie.id}`}>
+        <img
+          alt={movie.title}
+          className="rounded-lg lg:h-[300px] mb-4 md:hover:scale-105"
+          src={
+            movie.poster_path
+              ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
+              : "https://www.filmurray.com/200/500"
+          }
+        ></img>
+        <p className="overflow-auto mb-1">{movie.title}</p>
+        <Tooltip>
+          <TooltipTrigger>
+            <Rating value={movie.vote_average / 2} precision={0.1} />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{(movie.vote_average / 2).toFixed(2)} / 5 Stars</p>
+          </TooltipContent>
+        </Tooltip>
+      </Link>
+    </div>
+  );
 };
 
 export default Movie;
