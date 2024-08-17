@@ -7,12 +7,28 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { categories, genres } from "@/constants";
+import { categories } from "@/constants";
+import { useGetGenresQuery } from "@/services/TMDB";
+import { GenreProps } from "@/types";
 import { Link, useLocation } from "react-router-dom";
 
 const NavContent = () => {
   const location = useLocation();
   const pathname = location.pathname;
+  const { data, error, isFetching } = useGetGenresQuery();
+  console.log("Genre Data", data);
+
+  if (isFetching) return <div className="flex justify-center">Loading...</div>;
+
+  if (!data?.genres.length)
+    return (
+      <div className="flex align-bottom">
+        <h4>No movies found</h4>
+        <p>Please search for something else</p>
+      </div>
+    );
+
+  if (error) return <div>An error occurred</div>;
 
   return (
     <section className="flex h-full flex-col gap-6 pt-16">
@@ -49,30 +65,34 @@ const NavContent = () => {
       })}
       <Separator />
       Genres
-      {genres.map((item) => {
-        const isActive =
-          (pathname.includes(item.route) && item.route.length > 1) ||
-          pathname === item.route;
+      {data.genres.map(({ name, id }: GenreProps) => {
+        // const isActive =
+        //   (pathname.includes(item.route) && item.route.length > 1) ||
+        //   pathname === item.route;
 
         return (
-          <SheetClose asChild key={item.route}>
+          <SheetClose asChild key={`${id}_sheet`}>
             <Link
-              to={item.route}
-              className={`${
-                isActive
-                  ? "primary-gradient rounded-lg text-light-900"
-                  : "text-dark300_light900"
-              } flex items-center justify-start gap-4 bg-transparent p-4`}
+              to={"/"}
+              key={id}
+              className=" flex items-center justify-start gap-4 bg-transparent p-4"
+              // className={`${
+              //   isActive
+              //     ? "primary-gradient rounded-lg text-light-900"
+              //     : "text-dark300_light900"
+              // } flex items-center justify-start gap-4 bg-transparent p-4`}
             >
-              <img
+              {/* <img
                 src={item.icon}
                 alt={item.label}
                 width={20}
                 height={20}
                 className={`${isActive ? "" : "invert-colors"}`}
-              />
-              <p className={`${isActive ? "base-bold" : "base-medium"}`}>
-                {item.label}
+              /> */}
+              <p
+              // className={`${isActive ? "base-bold" : "base-medium"}`}
+              >
+                {name}
               </p>
             </Link>
           </SheetClose>
