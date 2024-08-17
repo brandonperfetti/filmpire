@@ -6,12 +6,13 @@ export interface CategoryProps {
 }
 
 export interface GenreProps {
-  label: string;
-  value: string;
-  icon: string;
-  route: string;
+  id: number;
+  name: string;
 }
 
+export interface GenreResponse {
+  genres: Genre[];
+}
 export interface MovieProps {
   adult: boolean;
   backdrop_path: string;

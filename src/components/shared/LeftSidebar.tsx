@@ -1,13 +1,26 @@
-"use client";
-
-import { categories, genres } from "@/constants";
-
+import { categories } from "@/constants";
+import { useGetGenresQuery } from "@/services/TMDB";
+import { GenreProps } from "@/types";
 import { Link, useLocation } from "react-router-dom";
 import { Separator } from "../ui/separator";
 
 const LeftSidebar = () => {
   const location = useLocation();
   const pathname = location.pathname;
+  const { data, error, isFetching } = useGetGenresQuery();
+  console.log("Genre Data", data);
+
+  if (isFetching) return <div className="flex justify-center">Loading...</div>;
+
+  if (!data?.genres.length)
+    return (
+      <div className="flex align-bottom">
+        <h4>No movies found</h4>
+        <p>Please search for something else</p>
+      </div>
+    );
+
+  if (error) return <div>An error occurred</div>;
 
   return (
     <>
@@ -52,22 +65,23 @@ const LeftSidebar = () => {
           })}
           <Separator />
           <div className="mx-auto lg:mx-0">Genres</div>
-          {genres.map((item) => {
-            const isActive =
-              (pathname.includes(item.route) && item.route.length > 1) ||
-              pathname === item.route;
+          {data.genres.map(({ name, id }: GenreProps) => {
+            // const isActive =
+            //   (pathname.includes(item.route) && item.route.length > 1) ||
+            //   pathname === item.route;
 
             return (
               <Link
-                to={item.route}
-                key={item.label}
-                className={`${
-                  isActive
-                    ? "primary-gradient text-light-900"
-                    : "text-dark300_light900"
-                }  flex items-center justify-start gap-4 bg-transparent p-4 hover:background-light800_dark400 rounded-lg`}
+                to={"/"}
+                key={id}
+                className="flex items-center justify-start gap-4 bg-transparent p-4 hover:background-light800_dark400 rounded-lg"
+                // className={`${
+                //   isActive
+                //     ? "primary-gradient text-light-900"
+                //     : "text-dark300_light900"
+                // }  flex items-center justify-start gap-4 bg-transparent p-4 hover:background-light800_dark400 rounded-lg`}
               >
-                <img
+                {/* <img
                   src={item.icon}
                   alt={item.label}
                   width={20}
@@ -75,13 +89,13 @@ const LeftSidebar = () => {
                   className={`${
                     isActive ? "" : "invert-colors"
                   } sm:mx-auto lg:mx-0`}
-                />
+                /> */}
                 <p
-                  className={`${
-                    isActive ? "base-bold" : "base-medium"
-                  } max-lg:hidden`}
+                // className={`${
+                //   isActive ? "base-bold" : "base-medium"
+                // } max-lg:hidden`}
                 >
-                  {item.label}
+                  {name}
                 </p>
               </Link>
             );
