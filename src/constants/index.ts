@@ -1,4 +1,4 @@
-import { Category, Genre } from "@/types";
+import { CategoryProps, GenreProps } from "@/types";
 
 export const themes = [
   { value: "light", label: "Light", icon: "/assets/icons/sun.svg" },
@@ -6,12 +6,12 @@ export const themes = [
   { value: "system", label: "System", icon: "/assets/icons/computer.svg" },
 ];
 
-export const categories: Category[] = [
+export const categories: CategoryProps[] = [
   {
     label: "Popular",
     value: "popular",
     icon: "/assets/icons/popcorn.svg",
-    route: "/movies/popular",
+    route: "/",
   },
   {
     label: "Top Rated",
@@ -27,7 +27,7 @@ export const categories: Category[] = [
   },
 ];
 
-export const genres: Genre[] = [
+export const genres: GenreProps[] = [
   {
     label: "Action",
     value: "action",
