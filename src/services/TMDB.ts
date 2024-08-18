@@ -16,20 +16,27 @@ export const tmdbApi = createApi({
     }),
 
     getMovies: builder.query({
-      query: ({ genreIdOrCategoryName, page }) => {
-        switch (typeof genreIdOrCategoryName) {
-          case "string":
-            // Get Movies by Category
-            return `movie/${genreIdOrCategoryName}?page=${page}&api_key=${tmdpApiKey}`;
-
-          case "number":
-            // Get Movies by Genre
-            return `discover/movie?with_genres=${genreIdOrCategoryName}&page=${page}&api_key=${tmdpApiKey}`;
-
-          default:
-            // Get Popular Movies
-            return `movie/popular?page=${page}&api_key=${tmdpApiKey}`;
+      query: ({ genreIdOrCategoryName, page, searchQuery }) => {
+        // Get Movies by Category
+        if (
+          genreIdOrCategoryName &&
+          typeof genreIdOrCategoryName === "string"
+        ) {
+          return `movie/${genreIdOrCategoryName}?page=${page}&api_key=${tmdpApiKey}`;
         }
+        // Get Movies by Genre
+        if (
+          genreIdOrCategoryName &&
+          typeof genreIdOrCategoryName === "number"
+        ) {
+          return `discover/movie?with_genres=${genreIdOrCategoryName}&page=${page}&api_key=${tmdpApiKey}`;
+        }
+        // Get Movies by Search
+        if (searchQuery) {
+          return `search/movie?query=${searchQuery}&page=${page}&api_key=${tmdpApiKey}`;
+        }
+        // Get Popular Movies by default
+        return `movie/popular?page=${page}&api_key=${tmdpApiKey}`;
       },
     }),
   }),

@@ -7,18 +7,22 @@ import { useSelector } from "react-redux";
 const MoviesPage = () => {
   const [page, setpage] = useState(1);
 
+  const searchQuery = useSelector(
+    (state: RootState) => state.currentGenreOrCategory.searchQuery,
+  );
   const genreIdOrCategoryName = useSelector(
     (state: RootState) => state.currentGenreOrCategory.genreIdOrCategoryName,
   );
 
   const { data, error, isFetching } = useGetMoviesQuery({
     genreIdOrCategoryName,
+    searchQuery,
     page,
   });
 
   if (isFetching) return <div className="flex justify-center">Loading...</div>;
 
-  if (!data.results.length)
+  if (!data?.results.length)
     return (
       <div className="flex align-bottom">
         <h4>No movies found</h4>

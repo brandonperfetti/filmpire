@@ -73,7 +73,7 @@ const NavContent = () => {
       <Separator />
       Genres
       {data.genres.map(({ name, id }: GenreProps) => {
-        const isActive = genreIdOrCategoryName === id;
+        const isActive = genreIdOrCategoryName === (id as unknown);
 
         return (
           <SheetClose asChild key={`${id}_sheet`}>
@@ -94,7 +94,7 @@ const NavContent = () => {
                 alt={genreIcons[name.toLowerCase() as keyof typeof genreIcons]}
                 width={20}
                 height={20}
-                className={`${isActive ? "" : "invert-colors"}`}
+                className={`${isActive ? "invert-colors" : ""}`}
               />
               <p className={`${isActive ? "base-bold" : "base-medium"}`}>
                 {name}
@@ -131,7 +131,7 @@ const MobileNav = () => {
         <div className="flex-1 overflow-y-auto pb-8 ">
           <Link to="/" className="flex items-center gap-1">
             <img
-              src="/src/assets/images/site-logo.svg"
+              src="/assets/images/site-logo.svg"
               width={23}
               height={23}
               alt="Filmpire"

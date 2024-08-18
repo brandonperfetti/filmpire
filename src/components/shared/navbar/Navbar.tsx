@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import MobileNav from "./MobileNav";
+import Search from "./Search";
 import Theme from "./Theme";
 
 const Navbar = () => {
@@ -18,20 +18,9 @@ const Navbar = () => {
           Film<span className="text-primary-500">pire</span>
         </p>
       </Link>
-      <div className="relative w-full max-w-[600px] max-lg:hidden">
+      <div className="relative w-full max-w-[500px] max-md:hidden">
         <div className="background-light800_darkgradient relative flex min-h-[56px] grow items-center gap-1 rounded-xl px-4">
-          <img
-            src="/src/assets/icons/search.svg"
-            alt="search"
-            width={24}
-            height={24}
-            className="cursor-pointer"
-          />
-          <Input
-            type="text"
-            placeholder="Search globally"
-            className="paragraph-regular no-focus placeholder text-dark400_light700 border-none bg-transparent shadow-none outline-none"
-          />
+          <Search />
         </div>
       </div>
 
