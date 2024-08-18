@@ -1,9 +1,8 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { GenreResponse } from "@/types"; // Make sure this path is correct
-
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const tmdpApiKey = import.meta.env.VITE_TMDB_KEY;
-console.log(tmdpApiKey);
+// console.log(tmdpApiKey);
 
 export const tmdbApi = createApi({
   reducerPath: "tmdbApi",
@@ -16,10 +15,21 @@ export const tmdbApi = createApi({
       },
     }),
 
-    // Get movies by [type]
     getMovies: builder.query({
-      query: ({ type, page = 1 }) => {
-        return `${type}?page=${page}&api_key=${tmdpApiKey}`;
+      query: ({ genreIdOrCategoryName, page }) => {
+        switch (typeof genreIdOrCategoryName) {
+          case "string":
+            // Get Movies by Category
+            return `movie/${genreIdOrCategoryName}?page=${page}&api_key=${tmdpApiKey}`;
+
+          case "number":
+            // Get Movies by Genre
+            return `discover/movie?with_genres=${genreIdOrCategoryName}&page=${page}&api_key=${tmdpApiKey}`;
+
+          default:
+            // Get Popular Movies
+            return `movie/popular?page=${page}&api_key=${tmdpApiKey}`;
+        }
       },
     }),
   }),

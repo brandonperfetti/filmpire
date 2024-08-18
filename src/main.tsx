@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
-import store from "./app/store.ts";
+import { store } from "./app/store.ts";
 import { TooltipProvider } from "./components/ui/tooltip.tsx";
 import { ThemeProvider } from "./context/ThemeProvider.tsx";
 import "./index.css";

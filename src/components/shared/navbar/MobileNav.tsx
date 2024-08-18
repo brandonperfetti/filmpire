@@ -1,3 +1,5 @@
+import { RootState } from "@/app/store";
+import genreIcons from "@/assets/icons/genres";
 import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
@@ -11,15 +13,14 @@ import { categories } from "@/constants";
 import { selectGenreOrCategory } from "@/features/currentGenreOrCategory";
 import { useGetGenresQuery } from "@/services/TMDB";
 import { GenreProps } from "@/types";
-import { useDispatch } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
-import genreIcons from "../../../../public/assets/icons/genres";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const NavContent = () => {
-  const location = useLocation();
-  const pathname = location.pathname;
+  const genreIdOrCategoryName = useSelector(
+    (state: RootState) => state.currentGenreOrCategory.genreIdOrCategoryName,
+  );
   const { data, error, isFetching } = useGetGenresQuery();
-  console.log("Genre Data", data);
 
   const dispatch = useDispatch();
 
@@ -40,14 +41,12 @@ const NavContent = () => {
       <Separator className="-mt-9" />
       Categories
       {categories.map((item) => {
-        const isActive =
-          (pathname.includes(item.route) && item.route.length > 1) ||
-          pathname === item.route;
+        const isActive = genreIdOrCategoryName === item.value;
 
         return (
-          <SheetClose asChild key={item.route}>
+          <SheetClose asChild key={item.value}>
             <Link
-              to={item.route}
+              to={"/"}
               onClick={() => {
                 dispatch(selectGenreOrCategory(item.value));
               }}
@@ -74,32 +73,30 @@ const NavContent = () => {
       <Separator />
       Genres
       {data.genres.map(({ name, id }: GenreProps) => {
-        // const isActive =
-        //   (pathname.includes(item.route) && item.route.length > 1) ||
-        //   pathname === item.route;
+        const isActive = genreIdOrCategoryName === id;
 
         return (
           <SheetClose asChild key={`${id}_sheet`}>
             <Link
               to={"/"}
+              onClick={() => {
+                dispatch(selectGenreOrCategory(id));
+              }}
               key={id}
-              className=" flex items-center justify-start gap-4 bg-transparent p-4"
-              // className={`${
-              //   isActive
-              //     ? "primary-gradient rounded-lg text-light-900"
-              //     : "text-dark300_light900"
-              // } flex items-center justify-start gap-4 bg-transparent p-4`}
+              className={`${
+                isActive
+                  ? "primary-gradient rounded-lg text-light-900"
+                  : "text-dark300_light900"
+              } flex items-center justify-start gap-4 bg-transparent p-4`}
             >
               <img
                 src={genreIcons[name.toLowerCase() as keyof typeof genreIcons]}
                 alt={genreIcons[name.toLowerCase() as keyof typeof genreIcons]}
                 width={20}
                 height={20}
-                // className={`${isActive ? "" : "invert-colors"}`}
+                className={`${isActive ? "" : "invert-colors"}`}
               />
-              <p
-              // className={`${isActive ? "base-bold" : "base-medium"}`}
-              >
+              <p className={`${isActive ? "base-bold" : "base-medium"}`}>
                 {name}
               </p>
             </Link>
@@ -115,7 +112,7 @@ const MobileNav = () => {
     <Sheet>
       <SheetTrigger asChild>
         <img
-          src="/assets/icons/hamburger.svg"
+          src="/src/assets/icons/hamburger.svg"
           width={34}
           height={34}
           alt="Menu"
@@ -134,7 +131,7 @@ const MobileNav = () => {
         <div className="flex-1 overflow-y-auto pb-8 ">
           <Link to="/" className="flex items-center gap-1">
             <img
-              src="/assets/images/site-logo.svg"
+              src="/src/assets/images/site-logo.svg"
               width={23}
               height={23}
               alt="Filmpire"

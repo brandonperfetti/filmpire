@@ -1,17 +1,19 @@
+import { RootState } from "@/app/store";
+import genreIcons from "@/assets/icons/genres";
 import { categories } from "@/constants";
 import { selectGenreOrCategory } from "@/features/currentGenreOrCategory";
 import { useGetGenresQuery } from "@/services/TMDB";
 import { GenreProps } from "@/types";
-import { useDispatch } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { Separator } from "../ui/separator";
-import genreIcons from "./../../../public/assets/icons/genres";
 
 const LeftSidebar = () => {
-  const location = useLocation();
-  const pathname = location.pathname;
+  const genreIdOrCategoryName = useSelector(
+    (state: RootState) => state.currentGenreOrCategory.genreIdOrCategoryName,
+  );
+
   const { data, error, isFetching } = useGetGenresQuery();
-  console.log("Genre Data", data);
 
   const dispatch = useDispatch();
 
@@ -34,13 +36,10 @@ const LeftSidebar = () => {
           <Separator className="-mt-9" />
           <div className="mx-auto lg:mx-0">Categories</div>
           {categories.map((category) => {
-            const isActive =
-              (pathname.includes(category.route) &&
-                category.route.length > 1) ||
-              pathname === category.route;
+            const isActive = genreIdOrCategoryName === category.value;
             return (
               <Link
-                to={category.route}
+                to={"/"}
                 onClick={() => {
                   dispatch(selectGenreOrCategory(category.value));
                 }}
@@ -73,46 +72,41 @@ const LeftSidebar = () => {
           })}
           <Separator />
           <div className="mx-auto lg:mx-0">Genres</div>
-          {data.genres.map(({ name, id }: GenreProps) => {
-            // const isActive =
-            //   (pathname.includes(item.route) && item.route.length > 1) ||
-            //   pathname === item.route;
+          {data.genres.map((genre: GenreProps) => {
+            const isActive = genreIdOrCategoryName === genre.id;
 
             return (
               <Link
                 to={"/"}
                 onClick={() => {
-                  dispatch(selectGenreOrCategory(id));
+                  dispatch(selectGenreOrCategory(genre.id));
                 }}
-                key={id}
-                className="flex items-center justify-start gap-4 bg-transparent p-4 hover:background-light800_dark400 rounded-lg"
-                // className={`${
-                //   isActive
-                //     ? "primary-gradient text-light-900"
-                //     : "text-dark300_light900"
-                // }  flex items-center justify-start gap-4 bg-transparent p-4 hover:background-light800_dark400 rounded-lg`}
+                key={genre.id}
+                className={`${
+                  isActive
+                    ? "primary-gradient text-light-900"
+                    : "text-dark300_light900"
+                }  flex items-center justify-start gap-4 bg-transparent p-4 hover:background-light800_dark400 rounded-lg`}
               >
                 <img
                   src={
-                    genreIcons[name.toLowerCase() as keyof typeof genreIcons]
+                    genreIcons[genre.name.toLowerCase() as keyof typeof genreIcons]
                   }
                   alt={
-                    genreIcons[name.toLowerCase() as keyof typeof genreIcons]
+                    genreIcons[genre.name.toLowerCase() as keyof typeof genreIcons]
                   }
                   width={20}
                   height={20}
-                  className="sm:mx-auto lg:mx-0"
-                  // className={`${
-                  //   isActive ? "" : "invert-colors"
-                  // } sm:mx-auto lg:mx-0`}
+                  className={`${
+                    isActive ? "invert-colors" : ""
+                  } sm:mx-auto lg:mx-0`}
                 />
                 <p
-                  className=" max-lg:hidden"
-                  // className={`${
-                  //   isActive ? "base-bold" : "base-medium"
-                  // } max-lg:hidden`}
+                  className={`${
+                    isActive ? "base-bold" : "base-medium"
+                  } max-lg:hidden`}
                 >
-                  {name}
+                  {genre.name}
                 </p>
               </Link>
             );
