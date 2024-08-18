@@ -73,7 +73,7 @@ const LeftSidebar = () => {
           <Separator />
           <div className="mx-auto lg:mx-0">Genres</div>
           {data.genres.map((genre: GenreProps) => {
-            const isActive = genreIdOrCategoryName === genre.id;
+            const isActive = genreIdOrCategoryName === (genre.id as unknown);
 
             return (
               <Link
@@ -90,10 +90,14 @@ const LeftSidebar = () => {
               >
                 <img
                   src={
-                    genreIcons[genre.name.toLowerCase() as keyof typeof genreIcons]
+                    genreIcons[
+                      genre.name.toLowerCase() as keyof typeof genreIcons
+                    ]
                   }
                   alt={
-                    genreIcons[genre.name.toLowerCase() as keyof typeof genreIcons]
+                    genreIcons[
+                      genre.name.toLowerCase() as keyof typeof genreIcons
+                    ]
                   }
                   width={20}
                   height={20}

@@ -39,3 +39,31 @@ export interface MovieResponseProps {
 export interface MovieListProps {
   movies: MovieResponseProps;
 }
+
+export interface AvatarGravatar {
+  hash: string;
+}
+
+export interface AvatarTmdb {
+  avatar_path: string | null;
+}
+
+export interface Avatar {
+  gravatar: AvatarGravatar;
+  tmdb: AvatarTmdb;
+}
+
+export interface User {
+  avatar: Avatar;
+  id: number;
+  include_adult: boolean;
+  iso_639_1: string;
+  iso_3166_1: string;
+  name: string;
+  username: string;
+}
+export interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+  sessionId: string | null;
+}

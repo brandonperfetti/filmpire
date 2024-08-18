@@ -1,8 +1,7 @@
+import { tmdpApiKey } from "@/lib/utils";
 import { GenreResponse } from "@/types"; // Make sure this path is correct
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const tmdpApiKey = import.meta.env.VITE_TMDB_KEY;
-// console.log(tmdpApiKey);
 
 export const tmdbApi = createApi({
   reducerPath: "tmdbApi",
