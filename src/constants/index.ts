@@ -1,4 +1,4 @@
-import { CategoryProps, GenreProps } from "@/types";
+import { CategoryProps } from "@/types";
 
 export const themes = [
   { value: "light", label: "Light", icon: "/assets/icons/sun.svg" },
@@ -24,32 +24,5 @@ export const categories: CategoryProps[] = [
     value: "upcoming",
     icon: "/assets/icons/calendar.svg",
     route: "/movies/upcoming",
-  },
-];
-
-export const genres: GenreProps[] = [
-  {
-    label: "Action",
-    value: "action",
-    icon: "/assets/icons/bomb.svg",
-    route: "/movies/action",
-  },
-  {
-    label: "Drama",
-    value: "drama",
-    icon: "/assets/icons/drama.svg",
-    route: "/movies/comedy",
-  },
-  {
-    label: "Horror",
-    value: "horror",
-    icon: "/assets/icons/skull.svg",
-    route: "/movies/horror",
-  },
-  {
-    label: "Animation",
-    value: "animation",
-    icon: "/assets/icons/palette.svg",
-    route: "/movies/animation",
   },
 ];

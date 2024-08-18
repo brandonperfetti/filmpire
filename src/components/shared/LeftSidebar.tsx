@@ -3,6 +3,7 @@ import { useGetGenresQuery } from "@/services/TMDB";
 import { GenreProps } from "@/types";
 import { Link, useLocation } from "react-router-dom";
 import { Separator } from "../ui/separator";
+import genreIcons from "./../../../public/assets/icons/genres";
 
 const LeftSidebar = () => {
   const location = useLocation();
@@ -81,19 +82,25 @@ const LeftSidebar = () => {
                 //     : "text-dark300_light900"
                 // }  flex items-center justify-start gap-4 bg-transparent p-4 hover:background-light800_dark400 rounded-lg`}
               >
-                {/* <img
-                  src={item.icon}
-                  alt={item.label}
+                <img
+                  src={
+                    genreIcons[name.toLowerCase() as keyof typeof genreIcons]
+                  }
+                  alt={
+                    genreIcons[name.toLowerCase() as keyof typeof genreIcons]
+                  }
                   width={20}
                   height={20}
-                  className={`${
-                    isActive ? "" : "invert-colors"
-                  } sm:mx-auto lg:mx-0`}
-                /> */}
+                  className="sm:mx-auto lg:mx-0"
+                  // className={`${
+                  //   isActive ? "" : "invert-colors"
+                  // } sm:mx-auto lg:mx-0`}
+                />
                 <p
-                // className={`${
-                //   isActive ? "base-bold" : "base-medium"
-                // } max-lg:hidden`}
+                  className=" max-lg:hidden"
+                  // className={`${
+                  //   isActive ? "base-bold" : "base-medium"
+                  // } max-lg:hidden`}
                 >
                   {name}
                 </p>

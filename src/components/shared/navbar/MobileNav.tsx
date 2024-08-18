@@ -11,6 +11,7 @@ import { categories } from "@/constants";
 import { useGetGenresQuery } from "@/services/TMDB";
 import { GenreProps } from "@/types";
 import { Link, useLocation } from "react-router-dom";
+import genreIcons from "../../../../public/assets/icons/genres";
 
 const NavContent = () => {
   const location = useLocation();
@@ -82,13 +83,13 @@ const NavContent = () => {
               //     : "text-dark300_light900"
               // } flex items-center justify-start gap-4 bg-transparent p-4`}
             >
-              {/* <img
-                src={item.icon}
-                alt={item.label}
+              <img
+                src={genreIcons[name.toLowerCase() as keyof typeof genreIcons]}
+                alt={genreIcons[name.toLowerCase() as keyof typeof genreIcons]}
                 width={20}
                 height={20}
-                className={`${isActive ? "" : "invert-colors"}`}
-              /> */}
+                // className={`${isActive ? "" : "invert-colors"}`}
+              />
               <p
               // className={`${isActive ? "base-bold" : "base-medium"}`}
               >
@@ -123,7 +124,7 @@ const MobileNav = () => {
           Navigation links and user actions
         </SheetDescription>
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto pb-8 ">
           <Link to="/" className="flex items-center gap-1">
             <img
               src="/assets/images/site-logo.svg"
