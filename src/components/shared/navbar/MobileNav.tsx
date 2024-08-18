@@ -8,8 +8,10 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { categories } from "@/constants";
+import { selectGenreOrCategory } from "@/features/currentGenreOrCategory";
 import { useGetGenresQuery } from "@/services/TMDB";
 import { GenreProps } from "@/types";
+import { useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import genreIcons from "../../../../public/assets/icons/genres";
 
@@ -18,6 +20,8 @@ const NavContent = () => {
   const pathname = location.pathname;
   const { data, error, isFetching } = useGetGenresQuery();
   console.log("Genre Data", data);
+
+  const dispatch = useDispatch();
 
   if (isFetching) return <div className="flex justify-center">Loading...</div>;
 
@@ -44,6 +48,9 @@ const NavContent = () => {
           <SheetClose asChild key={item.route}>
             <Link
               to={item.route}
+              onClick={() => {
+                dispatch(selectGenreOrCategory(item.value));
+              }}
               className={`${
                 isActive
                   ? "primary-gradient rounded-lg text-light-900"

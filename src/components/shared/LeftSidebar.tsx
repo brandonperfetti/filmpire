@@ -1,6 +1,8 @@
 import { categories } from "@/constants";
+import { selectGenreOrCategory } from "@/features/currentGenreOrCategory";
 import { useGetGenresQuery } from "@/services/TMDB";
 import { GenreProps } from "@/types";
+import { useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { Separator } from "../ui/separator";
 import genreIcons from "./../../../public/assets/icons/genres";
@@ -10,6 +12,8 @@ const LeftSidebar = () => {
   const pathname = location.pathname;
   const { data, error, isFetching } = useGetGenresQuery();
   console.log("Genre Data", data);
+
+  const dispatch = useDispatch();
 
   if (isFetching) return <div className="flex justify-center">Loading...</div>;
 
@@ -37,6 +41,9 @@ const LeftSidebar = () => {
             return (
               <Link
                 to={category.route}
+                onClick={() => {
+                  dispatch(selectGenreOrCategory(category.value));
+                }}
                 key={category.label}
                 className={`${
                   isActive
@@ -74,6 +81,9 @@ const LeftSidebar = () => {
             return (
               <Link
                 to={"/"}
+                onClick={() => {
+                  dispatch(selectGenreOrCategory(id));
+                }}
                 key={id}
                 className="flex items-center justify-start gap-4 bg-transparent p-4 hover:background-light800_dark400 rounded-lg"
                 // className={`${
