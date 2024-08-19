@@ -12,7 +12,7 @@ const Movie = ({ movie, index }: Props) => {
   const delay = `${index * 250}ms`;
   return (
     <div className="animate-grow opacity-0" style={{ animationDelay: delay }}>
-      <Link to={`/movie/${movie.id}`}>
+      <Link to={`/movies/${movie.id}`}>
         <img
           alt={movie.title}
           className="rounded-lg lg:h-[300px] mb-4 md:hover:scale-105"

@@ -1,8 +1,8 @@
 import { RootState } from "@/app/store";
-import { AuthState } from "@/types";
+import { AuthStateProps } from "@/types";
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState: AuthState = {
+const initialState: AuthStateProps = {
   user: null,
   isAuthenticated: false,
   sessionId: "",

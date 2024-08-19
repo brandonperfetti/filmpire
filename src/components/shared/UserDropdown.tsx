@@ -1,6 +1,7 @@
-import { User } from "@/types";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { UserProps } from "@/types";
+
 import { Link } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
-export default function UserDropdown({ user }: { user: User }) {
+export default function UserDropdown({ user }: { user: UserProps }) {
   const gravatarHash = user?.avatar?.gravatar?.hash;
 
   const logout = () => {
@@ -21,10 +22,7 @@ export default function UserDropdown({ user }: { user: User }) {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage
-            className="rounded-3xl object-cover size-8 md:size-10"
-            src={`https://gravatar.com/avatar/${gravatarHash}`}
-          />
+          <AvatarImage src={`https://gravatar.com/avatar/${gravatarHash}`} />
           <AvatarFallback>{""}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

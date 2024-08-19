@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 
 const MoviesPage = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [page, setpage] = useState(1);
 
   const searchQuery = useSelector(

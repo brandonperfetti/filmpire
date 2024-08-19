@@ -55,7 +55,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="flex-between md:gap-5">
+      <div className="flex-between lg:gap-5">
         <Theme />
         {isAuthenticated && user ? (
           <div className="mr-2.5 md:mr-0">

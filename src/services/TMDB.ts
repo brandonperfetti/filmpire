@@ -1,14 +1,12 @@
 import { tmdpApiKey } from "@/lib/utils";
-import { GenreResponse } from "@/types"; // Make sure this path is correct
+import { GenreResponseProps } from "@/types"; // Make sure this path is correct
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
 
 export const tmdbApi = createApi({
   reducerPath: "tmdbApi",
   baseQuery: fetchBaseQuery({ baseUrl: "https://api.themoviedb.org/3" }),
   endpoints: (builder) => ({
-    // Get Genres
-    getGenres: builder.query<GenreResponse, void>({
+    getGenres: builder.query<GenreResponseProps, void>({
       query: () => {
         return `genre/movie/list?api_key=${tmdpApiKey}`;
       },
@@ -38,7 +36,20 @@ export const tmdbApi = createApi({
         return `movie/popular?page=${page}&api_key=${tmdpApiKey}`;
       },
     }),
+    getMovie: builder.query({
+      query: (id) =>
+        `movie/${id}?append_to_response=videos,credits&api_key=${tmdpApiKey}`,
+    }),
+    getRecommendations: builder.query({
+      query: (movie_id) =>
+        `movie/${movie_id}/recommendations?api_key=${tmdpApiKey}`,
+    }),
   }),
 });
 
-export const { useGetGenresQuery, useGetMoviesQuery } = tmdbApi;
+export const {
+  useGetGenresQuery,
+  useGetMoviesQuery,
+  useGetMovieQuery,
+  useGetRecommendationsQuery,
+} = tmdbApi;
