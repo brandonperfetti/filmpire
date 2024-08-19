@@ -2,6 +2,12 @@ import genreIcons from "@/assets/icons/genres";
 import MovieList from "@/components/shared/MovieList";
 import Rating from "@/components/shared/Rating";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useTheme } from "@/context/useTheme";
 import { selectGenreOrCategory } from "@/features/currentGenreOrCategory";
 import { useGetMovieQuery, useGetRecommendationsQuery } from "@/services/TMDB";
@@ -15,11 +21,13 @@ import {
   Minus,
   Plus,
 } from "lucide-react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 
 const MovieInfoPage = () => {
   const { id } = useParams();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const { data, isFetching, isError } = useGetMovieQuery(id);
 
@@ -162,7 +170,10 @@ const MovieInfoPage = () => {
                         IMDB
                       </Button>
                     </Link>
-                    <Button variant="outline" onClick={() => {}}>
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsDialogOpen(true)}
+                    >
                       <Film color="red" className="mr-2 size-4" /> Trailer
                     </Button>
                   </div>
@@ -212,6 +223,23 @@ const MovieInfoPage = () => {
           <p>Sorry, nothing was found</p>
         )}
       </div>
+      <Dialog open={isDialogOpen} onOpenChange={() => setIsDialogOpen(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Watch {movieData.title} Trailer</DialogTitle>
+          </DialogHeader>
+          {movieData?.videos?.results?.length > 0 ? (
+            <iframe
+              className="w-full h-96 rounded"
+              title="Trailer"
+              src={`https://www.youtube.com/embed/${movieData?.videos?.results[0].key}?autoplay=1`}
+              allow="autoplay; fullscreen"
+            />
+          ) : (
+            <p>No Trailer Available</p>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
