@@ -1,5 +1,6 @@
 import { RootState } from "@/app/store";
 import genreIcons from "@/assets/icons/genres";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
@@ -10,9 +11,12 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { categories } from "@/constants";
+import { setUser, userSelector } from "@/features/auth";
 import { selectGenreOrCategory } from "@/features/currentGenreOrCategory";
+import { createSessionId, fetchToken, moviesApi } from "@/lib/utils";
 import { useGetGenresQuery } from "@/services/TMDB";
 import { GenreProps } from "@/types";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -37,7 +41,8 @@ const NavContent = () => {
   if (error) return <div>An error occurred</div>;
 
   return (
-    <section className="flex h-full flex-col gap-6 pt-16">
+    <section className="flex h-full flex-col gap-6 pt-8">
+      <div className="flex flex-col gap-3"></div>
       <Separator className="-mt-9" />
       Categories
       {categories.map((item) => {
@@ -108,6 +113,36 @@ const NavContent = () => {
 };
 
 const MobileNav = () => {
+  const { isAuthenticated, user } = useSelector(userSelector);
+  const token = localStorage.getItem("request_token");
+  const sessionIdFromLocalStorage = localStorage.getItem("session_id");
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!token) {
+      // console.log("User is not authenticated, skipping login process.");
+      return;
+    }
+    const logInUser = async () => {
+      if (token) {
+        if (sessionIdFromLocalStorage) {
+          const { data: userData } = await moviesApi.get(
+            `/account?session_id=${sessionIdFromLocalStorage}`,
+          );
+          dispatch(setUser(userData));
+        } else {
+          const sessionId = await createSessionId();
+          const { data: userData } = await moviesApi.get(
+            `/account?session_id=${sessionId}`,
+          );
+          dispatch(setUser(userData));
+        }
+      }
+    };
+    logInUser();
+  }, [dispatch, token, sessionIdFromLocalStorage]);
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -128,7 +163,7 @@ const MobileNav = () => {
           Navigation links and user actions
         </SheetDescription>
 
-        <div className="flex-1 overflow-y-auto pb-8 ">
+        <div className="flex-1 overflow-y-auto no-scrollbar pb-8 ">
           <Link to="/" className="flex items-center gap-1">
             <img
               src="/assets/images/site-logo.svg"
@@ -142,6 +177,18 @@ const MobileNav = () => {
             </p>
           </Link>
           <div>
+            {!isAuthenticated && !user && (
+              <SheetClose asChild>
+                <Button
+                  onClick={fetchToken}
+                  className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none mt-4"
+                >
+                  <span className="primary-text-gradient text-base">
+                    Log In
+                  </span>
+                </Button>
+              </SheetClose>
+            )}
             <SheetClose asChild>
               <NavContent />
             </SheetClose>

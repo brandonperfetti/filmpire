@@ -42,6 +42,7 @@ const LeftSidebar = () => {
                 to={"/"}
                 onClick={() => {
                   dispatch(selectGenreOrCategory(category.value));
+                  window.scrollTo(0, 0);
                 }}
                 key={category.label}
                 className={`${
@@ -80,6 +81,7 @@ const LeftSidebar = () => {
                 to={"/"}
                 onClick={() => {
                   dispatch(selectGenreOrCategory(genre.id));
+                  window.scrollTo(0, 0);
                 }}
                 key={genre.id}
                 className={`${

@@ -23,10 +23,11 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const MovieInfoPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const { data, isFetching, isError } = useGetMovieQuery(id);
@@ -42,16 +43,20 @@ const MovieInfoPage = () => {
 
   const {
     data: recommendationsData,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isFetching: isRecommendationsFetching,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isError: isRecommendationsError,
-  } = useGetRecommendationsQuery(id); // Only pass `id`
+  } = useGetRecommendationsQuery(id);
 
   console.log("Recomendations Data", recommendationsData);
 
-  if (isFetching) return <div>Loading...</div>;
-  if (isError) return <Link to={"/"}>Something Has Gone Wrong, Go Home</Link>;
+  if (isFetching || isRecommendationsFetching)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Loading...
+      </div>
+    );
+  if (isError || isRecommendationsError)
+    return <Link to={"/"}>Something Has Gone Wrong, Go Home</Link>;
 
   const isMovieFavorited = true;
   const isMovieWatchlisted = true;
@@ -65,37 +70,39 @@ const MovieInfoPage = () => {
   };
 
   return (
-    <div className="grid">
-      <div className="grid justify-around my-3 grid-cols-1 md:grid-cols-3">
+    <div className="background-light900_dark200 p-6 rounded-lg shadow-light100_dark100">
+      <div className="grid justify-around grid-cols-1 md:grid-cols-3">
         <div>
           <img
             src={`https://image.tmdb.org/t/p/w500/${movieData?.poster_path}`}
-            alt={data?.title}
+            alt={movieData?.title}
             className="rounded-2xl shadow-2xl sm:my-0 mx-auto md:mx-0 h-auto md:w-[80%]"
           />
         </div>
         <div className="grid col-span-2">
           <div className="my-4 md:my-0">
-            <h3 className="h3-bold mb-2 text-center">
+            <h3 className="h1-bold mb-2 text-center text-dark100_light900">
               {movieData?.title} ( {movieData?.release_date.split("-")[0]} )
             </h3>
-            <h5 className="mb-2 text-center">{movieData?.tagline}</h5>
-            <div className="flex justify-center flex-wrap">
+            <h5 className="mb-2 text-center text-dark200_light900">
+              {movieData?.tagline}
+            </h5>
+            <div className="flex justify-center items-center flex-wrap gap-4">
               <Rating value={movieData?.vote_average / 2} precision={0.1} />
-              <p className="pr-4 pl-2">
+              <p className="text-dark300_light700">
                 {(movieData?.vote_average / 2).toFixed(2)} / 5{" "}
               </p>
-              <div className="flex justify-center">
+              <div className="text-dark300_light700">
                 {movieData?.runtime} min /{" "}
                 {movieData?.spoken_languages.length > 0
                   ? movieData?.spoken_languages[0].english_name
                   : ""}
               </div>
             </div>
-            <div className="flex my-3 max-w-md mx-auto">
+            <div className="flex my-3 max-w-fit mx-auto">
               {movieData?.genres.map((genre) => (
                 <Link
-                  className="mx-auto flex flex-wrap justify-around"
+                  className="flex items-center gap-2 text-dark300_light900 hover:text-primary"
                   to={`/`}
                   key={genre.id}
                   onClick={() => {
@@ -119,13 +126,17 @@ const MovieInfoPage = () => {
                       mode === "light" ? "" : "invert-colors"
                     } ml-3 mr-2`}
                   />
-                  <p className="md:mr-2">{genre.name}</p>
+                  <p className="md:mr-2 hover:text-primary">{genre.name}</p>
                 </Link>
               ))}
             </div>
-            <h5 className="mt-3">Overview</h5>
-            <p className="my-6">{movieData.overview}</p>
-            <h5 className="mt-3">Top cast</h5>
+            <h5 className="h3-semibold mt-6 text-dark100_light900">Overview</h5>
+            <p className="my-6 paragraph-regular text-dark400_light800">
+              {movieData.overview}
+            </p>
+            <h5 className=" h3-semibold mt-6 text-dark100_light900">
+              Top cast
+            </h5>
             <div className="grid grid-cols-3 xl:grid-cols-6 gap-4 my-6">
               {movieData &&
                 movieData.credits?.cast
@@ -143,8 +154,10 @@ const MovieInfoPage = () => {
                           alt={castMember.name}
                           className="rounded-lg shadow-2xl h-40 w-28 md:hover:scale-105"
                         />
-                        <p className="text-center">{castMember.name}</p>
-                        <p className="text-center">
+                        <p className="text-center overflow-auto mt-3 mb-1 text-dark100_light900">
+                          {castMember.name}
+                        </p>
+                        <p className="text-center text-dark300_light700">
                           {castMember.character.split("/")[0]}
                         </p>
                       </Link>
@@ -152,77 +165,74 @@ const MovieInfoPage = () => {
                   })
                   .slice(0, 6)}
             </div>
-            <div className="grid mt-2">
-              <div className="grid xl:flex gap-3">
-                <div className="grid">
-                  <div className="space-x-2">
-                    <Link to={movieData?.homepage || ""}>
-                      <Button variant="outline">
-                        {" "}
-                        <Globe color="red" className="mr-2 size-4" />
-                        Website
-                      </Button>
-                    </Link>
+            <div className="grid xl:flex gap-4">
+              <div>
+                <div className="space-x-2">
+                  <Link to={movieData?.homepage || ""}>
+                    <Button variant="outline">
+                      <Globe color="red" className="mr-2 size-4" />
+                      Website
+                    </Button>
+                  </Link>
 
-                    <Link to={`https://imdb.com/title/${movieData?.imdb_id}`}>
-                      <Button variant="outline">
-                        <Clapperboard color="red" className="mr-2 size-4" />
-                        IMDB
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="outline"
-                      onClick={() => setIsDialogOpen(true)}
-                    >
-                      <Film color="red" className="mr-2 size-4" /> Trailer
+                  <Link to={`https://imdb.com/title/${movieData?.imdb_id}`}>
+                    <Button variant="outline">
+                      <Clapperboard color="red" className="mr-2 size-4" />
+                      IMDB
                     </Button>
-                  </div>
+                  </Link>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsDialogOpen(true)}
+                  >
+                    <Film color="red" className="mr-2 size-4" /> Trailer
+                  </Button>
                 </div>
-                <div className="grid">
-                  <div className="space-x-2">
-                    <Button
-                      variant={isMovieFavorited ? "destructive" : "outline"}
-                      onClick={addToFavorites}
-                    >
-                      <Heart
-                        color={isMovieFavorited ? "white" : "red"}
-                        className="mr-2 size-4"
-                      />{" "}
-                      {isMovieFavorited ? "Unfavorite" : "Add to Favorites"}
-                    </Button>
-                    <Button
-                      variant={isMovieWatchlisted ? "destructive" : "outline"}
-                      onClick={addToWatchlist}
-                    >
-                      {isMovieWatchlisted ? (
-                        <Minus color={"white"} className="mr-2 size-4" />
-                      ) : (
-                        <Plus color={"red"} className="mr-2 size-4" />
-                      )}
-                      Watchlist
-                    </Button>
-                    <Link to={"/"}>
-                      <Button variant="outline" onClick={() => {}}>
-                        <ArrowLeft color={"red"} className="mr-2 size-4" /> Back
-                      </Button>
-                    </Link>
-                  </div>
+              </div>
+              <div className="grid">
+                <div className="space-x-2">
+                  <Button
+                    variant={isMovieFavorited ? "destructive" : "outline"}
+                    onClick={addToFavorites}
+                  >
+                    <Heart
+                      color={isMovieFavorited ? "white" : "red"}
+                      className="mr-2 size-4"
+                    />{" "}
+                    {isMovieFavorited ? "Unfavorite" : "Add to Favorites"}
+                  </Button>
+                  <Button
+                    variant={isMovieWatchlisted ? "destructive" : "outline"}
+                    onClick={addToWatchlist}
+                  >
+                    {isMovieWatchlisted ? (
+                      <Minus color={"white"} className="mr-2 size-4" />
+                    ) : (
+                      <Plus color={"red"} className="mr-2 size-4" />
+                    )}
+                    Watchlist
+                  </Button>
+                  <Button variant="outline" onClick={() => navigate(-1)}>
+                    <ArrowLeft color={"red"} className="mr-2 size-4" /> Back
+                  </Button>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="mt-5 w-full">
-        <h3>You might also like</h3>
-        {recommendationsData ? (
-          <div className="my-6">
-            <MovieList movies={recommendationsData} numberOfMovies={12} />
-          </div>
-        ) : (
-          <p>Sorry, nothing was found</p>
-        )}
-      </div>
+      {recommendationsData.results.length > 0 && (
+        <div className="mt-5 w-full">
+          <h3 className="h3-semibold text-dark100_light900">
+            You might also like
+          </h3>
+          {recommendationsData && (
+            <div className="my-6">
+              <MovieList movies={recommendationsData} numberOfMovies={12} />
+            </div>
+          )}
+        </div>
+      )}
       <Dialog open={isDialogOpen} onOpenChange={() => setIsDialogOpen(false)}>
         <DialogContent>
           <DialogHeader>
@@ -236,7 +246,7 @@ const MovieInfoPage = () => {
               allow="autoplay; fullscreen"
             />
           ) : (
-            <p>No Trailer Available</p>
+            <p className="text-dark400_light800">No Trailer Available</p>
           )}
         </DialogContent>
       </Dialog>

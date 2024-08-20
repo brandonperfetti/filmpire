@@ -2,15 +2,19 @@ import { Input } from "@/components/ui/input";
 import { searchMovie } from "@/features/currentGenreOrCategory";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       dispatch(searchMovie(searchTerm));
+      navigate("/");
+      window.scrollTo(0, 0);
     }
   };
 

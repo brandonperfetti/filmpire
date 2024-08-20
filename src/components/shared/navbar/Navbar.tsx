@@ -17,6 +17,10 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (!token) {
+      // console.log("User is not authenticated, skipping login process.");
+      return;
+    }
     const logInUser = async () => {
       if (token) {
         if (sessionIdFromLocalStorage) {
@@ -62,7 +66,7 @@ const Navbar = () => {
             <UserDropdown user={user} />
           </div>
         ) : (
-          <Button size="sm" onClick={fetchToken}>
+          <Button size="sm" className="hidden md:flex" onClick={fetchToken}>
             Login
           </Button>
         )}

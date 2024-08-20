@@ -11,7 +11,10 @@ interface Props {
 const Movie = ({ movie, index }: Props) => {
   const delay = `${index * 250}ms`;
   return (
-    <div className="animate-grow opacity-0" style={{ animationDelay: delay }}>
+    <div
+      className="animate-grow opacity-0 p-4 rounded-lg"
+      style={{ animationDelay: delay }}
+    >
       <Link to={`/movies/${movie.id}`}>
         <img
           alt={movie.title}
