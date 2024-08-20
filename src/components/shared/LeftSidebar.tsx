@@ -1,5 +1,5 @@
 import { RootState } from "@/app/store";
-import genreIcons from "@/assets/icons/genres";
+import genreIcons from "./../../../public/assets/icons/genres";
 import { categories } from "@/constants";
 import { selectGenreOrCategory } from "@/features/currentGenreOrCategory";
 import { useGetGenresQuery } from "@/services/TMDB";

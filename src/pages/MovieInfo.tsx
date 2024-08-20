@@ -1,4 +1,4 @@
-import genreIcons from "@/assets/icons/genres";
+import genreIcons from "./../../public/assets/icons/genres";
 import MovieList from "@/components/shared/MovieList";
 import Rating from "@/components/shared/Rating";
 import { Button } from "@/components/ui/button";

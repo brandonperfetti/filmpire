@@ -1,5 +1,5 @@
 import { RootState } from "@/app/store";
-import genreIcons from "@/assets/icons/genres";
+import genreIcons from "./../../../../public/assets/icons/genres";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -147,7 +147,7 @@ const MobileNav = () => {
     <Sheet>
       <SheetTrigger asChild>
         <img
-          src="/src/assets/icons/hamburger.svg"
+          src="/assets/icons/hamburger.svg"
           width={34}
           height={34}
           alt="Menu"

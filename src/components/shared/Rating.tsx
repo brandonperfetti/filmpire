@@ -1,7 +1,7 @@
 import React from "react";
 
-import StarEmpty from "@/assets/icons/star-empty.svg";
-import StarFilled from "@/assets/icons/star-filled.svg";
+import StarEmpty from "./../../../public/assets/icons/star-empty.svg";
+import StarFilled from "./../../../public/assets/icons/star-filled.svg";
 
 interface RatingProps {
   value: number;

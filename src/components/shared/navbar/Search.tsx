@@ -21,7 +21,7 @@ const Search = () => {
   return (
     <>
       <img
-        src="/src/assets/icons/search.svg"
+        src="/assets/icons/search.svg"
         alt="search"
         width={24}
         height={24}
