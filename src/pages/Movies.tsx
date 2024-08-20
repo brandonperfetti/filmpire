@@ -33,15 +33,11 @@ const MoviesPage = () => {
   );
 
   if (isFetching || isFetchingGenre)
-    return (
-      <div className="flex justify-center items-center h-screen">
-        Loading...
-      </div>
-    );
+    return <div className="flex justify-center items-center ">Loading...</div>;
 
   if (!data?.results.length)
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex flex-col items-center justify-center">
         <h4 className="h3-semibold mb-2 text-dark100_light900">
           No movies found
         </h4>
@@ -53,7 +49,7 @@ const MoviesPage = () => {
 
   if (error || genreError)
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center">
         <p className="text-dark300_light700">
           An error occurred. Please try again later.
         </p>
@@ -61,14 +57,18 @@ const MoviesPage = () => {
     );
 
   return (
-    <div className="background-light900_dark200 p-6 rounded-lg shadow-light100_dark100">
-      {labelOrGenreName && (
+    <>
+      {labelOrGenreName ? (
         <h1 className="h1-bold mb-8 text-dark100_light900">
           {labelOrGenreName} Films
         </h1>
+      ) : (
+        <h1 className="h1-bold mb-8 text-dark100_light900">Popular Films</h1>
       )}
-      <MovieList movies={data} />
-    </div>
+      <div className="background-light900_dark200 md:p-6 rounded-lg shadow-light100_dark100">
+        <MovieList movies={data} />
+      </div>
+    </>
   );
 };
 

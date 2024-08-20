@@ -23,7 +23,7 @@ const ActorInfoPage = () => {
 
   if (isFetching)
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center">
         Loading...
       </div>
     );
@@ -35,7 +35,7 @@ const ActorInfoPage = () => {
     );
 
   return (
-    <div className="background-light900_dark200 p-6 rounded-lg shadow-light100_dark100">
+    <div className="background-light900_dark200 md:p-6 rounded-lg shadow-light100_dark100">
       <div className="grid justify-around my-3 grid-cols-1 md:grid-cols-3 gap-8">
         <div>
           <img

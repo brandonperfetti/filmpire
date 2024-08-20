@@ -1,4 +1,3 @@
-import genreIcons from "./../../public/assets/icons/genres";
 import MovieList from "@/components/shared/MovieList";
 import Rating from "@/components/shared/Rating";
 import { Button } from "@/components/ui/button";
@@ -24,6 +23,7 @@ import {
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import genreIcons from "./../../public/assets/icons/genres";
 
 const MovieInfoPage = () => {
   const { id } = useParams();
@@ -51,7 +51,7 @@ const MovieInfoPage = () => {
 
   if (isFetching || isRecommendationsFetching)
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center">
         Loading...
       </div>
     );
@@ -70,7 +70,7 @@ const MovieInfoPage = () => {
   };
 
   return (
-    <div className="background-light900_dark200 p-6 rounded-lg shadow-light100_dark100">
+    <div className="background-light900_dark200 p-2 md:p-6 rounded-lg shadow-light100_dark100">
       <div className="grid justify-around grid-cols-1 md:grid-cols-3">
         <div>
           <img
@@ -102,7 +102,7 @@ const MovieInfoPage = () => {
             <div className="flex my-3 max-w-fit mx-auto">
               {movieData?.genres.map((genre) => (
                 <Link
-                  className="flex items-center gap-2 text-dark300_light900 hover:text-primary"
+                  className="mx-auto flex flex-wrap justify-around text-dark300_light900 hover:text-primary"
                   to={`/`}
                   key={genre.id}
                   onClick={() => {

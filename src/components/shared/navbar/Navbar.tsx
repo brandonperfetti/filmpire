@@ -54,7 +54,7 @@ const Navbar = () => {
         </p>
       </Link>
       <div className="relative w-fit sm:w-auto flex-grow-0 md:flex-grow md:w-full md:max-w-[500px]">
-        <div className="background-light800_darkgradient relative flex h-[30px] md:h-[56px] grow items-center gap-1 rounded-xl px-4">
+        <div className="background-light800_darkgradient relative flex h-[36px] md:h-[56px] grow items-center gap-1 rounded-xl px-4">
           <Search />
         </div>
       </div>
