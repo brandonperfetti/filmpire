@@ -64,7 +64,7 @@ const MoviesPage = () => {
           {labelOrGenreName} Films
         </h1>
       ) : (
-        <h1 className="h1-bold mb-8 text-dark100_light900">Popular Films</h1>
+        <h1 className="h1-bold mb-8 text-dark100_light900">Filmpire</h1>
       )}
       <div className="background-light900_dark200 md:p-6 rounded-lg shadow-light100_dark100">
         <MovieList movies={data} />

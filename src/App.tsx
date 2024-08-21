@@ -10,7 +10,7 @@ function App() {
       <Navbar />
       <div className="flex">
         <LeftSidebar />
-        <main className="flex min-h-dvh flex-1 flex-col px-4 md:px-6 pb-6 pt-32 max-md:pb-14 sm:px-14">
+        <main className="flex min-h-dvh flex-1 flex-col px-4 md:px-6 pb-6 pt-24 md:pt-32 max-md:pb-14 sm:px-14">
           <Routes>
             <Route path="/" element={<Movies />} />
             <Route path="/movies/:id" element={<MovieInfo />} />

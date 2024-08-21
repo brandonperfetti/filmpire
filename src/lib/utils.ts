@@ -8,12 +8,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const tmdpApiKey = import.meta.env.VITE_TMDB_KEY;
+export const tmdbApiKey = import.meta.env.VITE_TMDB_KEY;
 
 export const moviesApi = axios.create({
   baseURL: "https://api.themoviedb.org/3",
   params: {
-    api_key: tmdpApiKey,
+    api_key: tmdbApiKey,
   },
 });
 
@@ -100,5 +100,18 @@ export function getLabelOrGenreName(
     const genreId = Number(genreIdOrCategoryName);
     const genre = genres.find((genre) => genre.id === genreId);
     return genre?.name; // Return the genre name or undefined if not found
+  }
+}
+export const navbarHeight = 125;
+
+export const scrollToElement = (ref: React.RefObject<HTMLDivElement>, navbarHeight?: number) => {
+
+  const offset = navbarHeight || 0; // Use the provided navbar height or default to 0
+  if (ref.current) {
+    const topPosition = ref.current.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({
+      top: topPosition - offset,
+      behavior: "smooth",
+    });
   }
 }

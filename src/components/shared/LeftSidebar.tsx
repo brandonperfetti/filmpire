@@ -34,7 +34,7 @@ const LeftSidebar = () => {
       <section className="background-light900_dark200 light-border custom-scrollbar sticky left-0 top-0 flex h-dvh flex-col justify-between overflow-y-auto border-r p-6 pt-36 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]">
         <div className="flex flex-1 flex-col gap-6">
           <Separator className="-mt-9" />
-          <div className="mx-auto lg:mx-0">Categories</div>
+          <div className="mx-auto lg:mx-0 h3-bold">Categories</div>
           {categories.map((category) => {
             const isActive = genreIdOrCategoryName === category.value;
             return (
@@ -72,7 +72,7 @@ const LeftSidebar = () => {
             );
           })}
           <Separator />
-          <div className="mx-auto lg:mx-0">Genres</div>
+          <div className="mx-auto lg:mx-0 h3-bold">Genres</div>
           {data.genres.map((genre: GenreProps) => {
             const isActive = genreIdOrCategoryName === (genre.id as unknown);
 

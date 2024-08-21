@@ -1,5 +1,4 @@
 import { RootState } from "@/app/store";
-import genreIcons from "./../../../../public/assets/icons/genres";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -19,6 +18,7 @@ import { GenreProps } from "@/types";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import genreIcons from "./../../../../public/assets/icons/genres";
 
 const NavContent = () => {
   const genreIdOrCategoryName = useSelector(
@@ -179,14 +179,16 @@ const MobileNav = () => {
           <div>
             {!isAuthenticated && !user && (
               <SheetClose asChild>
-                <Button
-                  onClick={fetchToken}
-                  className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none mt-4"
-                >
-                  <span className="primary-text-gradient text-base">
-                    Log In
-                  </span>
-                </Button>
+                <div className="mx-4">
+                  <Button
+                    onClick={fetchToken}
+                    className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none mt-4 focus:ring-0"
+                  >
+                    <span className="primary-text-gradient text-base">
+                      Log In
+                    </span>
+                  </Button>
+                </div>
               </SheetClose>
             )}
             <SheetClose asChild>

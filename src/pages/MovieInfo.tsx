@@ -9,9 +9,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useTheme } from "@/context/useTheme";
+import { userSelector } from "@/features/auth";
 import { selectGenreOrCategory } from "@/features/currentGenreOrCategory";
-import { useGetMovieQuery, useGetRecommendationsQuery } from "@/services/TMDB";
-import { MovieDetailsProps } from "@/types";
+import { scrollToElement, tmdbApiKey } from "@/lib/utils";
+import {
+  useGetListQuery,
+  useGetMovieQuery,
+  useGetRecommendationsQuery,
+} from "@/services/TMDB";
+import { MovieDetailsProps, MovieProps } from "@/types";
+import axios from "axios";
 import {
   ArrowLeft,
   Clapperboard,
@@ -21,27 +28,37 @@ import {
   Minus,
   Plus,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import genreIcons from "./../../public/assets/icons/genres";
 
 const MovieInfoPage = () => {
+  const { user } = useSelector(userSelector);
   const { id } = useParams();
-  const [page, setPage] = useState(1);
   const navigate = useNavigate();
+
+  const [page, setPage] = useState(1);
+  const [isPaginationTriggered, setIsPaginationTriggered] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isMovieFavorited, setIsMovieFavorited] = useState(false);
+  const [isMovieWatchlisted, setIsMovieWatchlisted] = useState(false);
 
   const { data, isFetching, isError } = useGetMovieQuery(id);
 
-  console.log("Movie Data", data);
+  const { data: favoriteMovies } = useGetListQuery({
+    listName: "favorite/movies",
+    accountId: user?.id,
+    sessionId: localStorage?.getItem("session_id"),
+    page: 1,
+  });
 
-  const movieData = data as MovieDetailsProps;
-  const { mode } = useTheme();
-
-  console.log("Mode", mode);
-
-  const dispatch = useDispatch();
+  const { data: watchlistMovies } = useGetListQuery({
+    listName: "watchlist/movies",
+    accountId: user?.id,
+    sessionId: localStorage?.getItem("session_id"),
+    page: 1,
+  });
 
   const {
     data: recommendationsData,
@@ -49,37 +66,85 @@ const MovieInfoPage = () => {
     isError: isRecommendationsError,
   } = useGetRecommendationsQuery({ id, page });
 
-  console.log("Recomendations Data", recommendationsData);
-
-  const topMoviesRef = useRef<HTMLDivElement>(null);
-  const navbarHeight = 125;
+  useEffect(() => {
+    setIsMovieFavorited(
+      !!favoriteMovies?.results?.find((movie: MovieProps) => movie?.id === data?.id),
+    );
+  }, [favoriteMovies, data]);
 
   useEffect(() => {
-    if (topMoviesRef.current) {
-      const topPosition =
-        topMoviesRef.current.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({
-        top: topPosition - navbarHeight,
-        behavior: "smooth",
-      });
+    setIsMovieWatchlisted(
+      !!watchlistMovies?.results?.find((movie: MovieProps) => movie?.id === data?.id),
+    );
+  }, [watchlistMovies, data]);
+
+  const addToFavorites = async () => {
+    await axios.post(
+      `https://api.themoviedb.org/3/account/${
+        user.id
+      }/favorite?api_key=${tmdbApiKey}&session_id=${localStorage.getItem(
+        "session_id",
+      )}`,
+      {
+        media_type: "movie",
+        media_id: id,
+        favorite: !isMovieFavorited,
+      },
+    );
+    setIsMovieFavorited((prev) => !prev);
+  };
+
+  // console.log({ isMovieWatchlisted });
+
+  const addToWatchlist = async () => {
+    await axios.post(
+      `https://api.themoviedb.org/3/account/${
+        user.id
+      }/watchlist?api_key=${tmdbApiKey}&session_id=${localStorage.getItem(
+        "session_id",
+      )}`,
+      {
+        media_type: "movie",
+        media_id: id,
+        watchlist: !isMovieWatchlisted,
+      },
+    );
+    setIsMovieWatchlisted((prev) => !prev);
+  };
+
+  // console.log("Movie Data", data);
+
+  const movieData = data as MovieDetailsProps;
+  const { mode } = useTheme();
+
+  // console.log("Mode", mode);
+
+  const dispatch = useDispatch();
+
+  // console.log("Recomendations Data", recommendationsData);
+
+  const topMoviesRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isPaginationTriggered && topMoviesRef.current) {
+      scrollToElement(topMoviesRef);
+      setIsPaginationTriggered(false);
     }
-  }, [page]);
+  }, [page, isPaginationTriggered]);
+
+  const handlePageChange: Dispatch<SetStateAction<number>> = (newPage) => {
+    if (typeof newPage === "number") {
+      setPage(newPage);
+    } else {
+      setPage((prevPage) => newPage(prevPage));
+    }
+    setIsPaginationTriggered(true);
+  };
 
   if (isFetching || isRecommendationsFetching)
     return <div className="flex justify-center items-center">Loading...</div>;
   if (isError || isRecommendationsError)
     return <Link to={"/"}>Something Has Gone Wrong, Go Home</Link>;
-
-  const isMovieFavorited = true;
-  const isMovieWatchlisted = true;
-
-  const addToFavorites = () => {
-    console.log("Added to favorites");
-  };
-
-  const addToWatchlist = () => {
-    console.log("Added to watch list");
-  };
 
   return (
     <div className="background-light900_dark200 p-2 md:p-6 rounded-lg shadow-light100_dark100">
@@ -210,28 +275,33 @@ const MovieInfoPage = () => {
                 </div>
               </div>
               <div className="grid">
-                <div className="space-x-2">
-                  <Button
-                    variant={isMovieFavorited ? "destructive" : "outline"}
-                    onClick={addToFavorites}
-                  >
-                    <Heart
-                      color={isMovieFavorited ? "white" : "red"}
-                      className="mr-2 size-4"
-                    />{" "}
-                    {isMovieFavorited ? "Unfavorite" : "Add to Favorites"}
-                  </Button>
-                  <Button
-                    variant={isMovieWatchlisted ? "destructive" : "outline"}
-                    onClick={addToWatchlist}
-                  >
-                    {isMovieWatchlisted ? (
-                      <Minus color={"white"} className="mr-2 size-4" />
-                    ) : (
-                      <Plus color={"red"} className="mr-2 size-4" />
-                    )}
-                    Watchlist
-                  </Button>
+                <div className="space-x-2 flex">
+                  {user && (
+                    <>
+                      <Button
+                        variant={isMovieFavorited ? "destructive" : "outline"}
+                        onClick={addToFavorites}
+                      >
+                        <Heart
+                          color={isMovieFavorited ? "white" : "red"}
+                          className="mr-2 size-4"
+                        />{" "}
+                        {isMovieFavorited ? "Unfavorite" : "Add to Favorites"}
+                      </Button>
+                      <Button
+                        variant={isMovieWatchlisted ? "destructive" : "outline"}
+                        onClick={addToWatchlist}
+                      >
+                        {isMovieWatchlisted ? (
+                          <Minus color={"white"} className="mr-2 size-4" />
+                        ) : (
+                          <Plus color={"red"} className="mr-2 size-4" />
+                        )}
+                        Watchlist
+                      </Button>
+                    </>
+                  )}
+
                   <Button variant="outline" onClick={() => navigate(-1)}>
                     <ArrowLeft color={"red"} className="mr-2 size-4" /> Back
                   </Button>
@@ -253,7 +323,7 @@ const MovieInfoPage = () => {
           )}
           <Pagination
             pageNumber={page}
-            setPage={setPage}
+            setPage={handlePageChange}
             totalPages={recommendationsData?.total_pages}
           />
         </div>

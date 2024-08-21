@@ -1,7 +1,7 @@
 import MovieList from "@/components/shared/MovieList";
 import Pagination from "@/components/shared/Pagination";
 import { Button } from "@/components/ui/button";
-import { getAge, getPrettyDate } from "@/lib/utils";
+import { getAge, getPrettyDate, navbarHeight, scrollToElement } from "@/lib/utils";
 import { useGetActorQuery, useGetMoviesByActorQuery } from "@/services/TMDB";
 import { ActorDetailsProps } from "@/types";
 import { ArrowLeft, Clapperboard } from "lucide-react";
@@ -24,16 +24,10 @@ const ActorInfoPage = () => {
   console.log("Movies by Actor Data", moviesByActorData);
 
   const topMoviesRef = useRef<HTMLDivElement>(null);
-  const navbarHeight = 125;
 
   useEffect(() => {
     if (topMoviesRef.current) {
-      const topPosition =
-        topMoviesRef.current.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({
-        top: topPosition - navbarHeight,
-        behavior: "smooth",
-      });
+      scrollToElement(topMoviesRef, navbarHeight);
     }
   }, [page]);
 
