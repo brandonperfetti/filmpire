@@ -89,8 +89,11 @@ const ProfilePage = () => {
         <div className="flex flex-col-reverse items-start justify-between sm:flex-row">
           <div className="flex flex-col items-start gap-4 lg:flex-row">
             <img
-              src={`https://gravatar.com/avatar/${gravatarHash}?s=200
-`}
+              src={
+                user?.avatar.tmdb.avatar_path
+                  ? `https://image.tmdb.org/t/p/w500/${user?.avatar.tmdb.avatar_path}`
+                  : `https://gravatar.com/avatar/${gravatarHash}?s=200`
+              }
               alt="profile picture"
               width={140}
               height={140}

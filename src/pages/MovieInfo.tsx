@@ -68,13 +68,17 @@ const MovieInfoPage = () => {
 
   useEffect(() => {
     setIsMovieFavorited(
-      !!favoriteMovies?.results?.find((movie: MovieProps) => movie?.id === data?.id),
+      !!favoriteMovies?.results?.find(
+        (movie: MovieProps) => movie?.id === data?.id,
+      ),
     );
   }, [favoriteMovies, data]);
 
   useEffect(() => {
     setIsMovieWatchlisted(
-      !!watchlistMovies?.results?.find((movie: MovieProps) => movie?.id === data?.id),
+      !!watchlistMovies?.results?.find(
+        (movie: MovieProps) => movie?.id === data?.id,
+      ),
     );
   }, [watchlistMovies, data]);
 
@@ -204,7 +208,7 @@ const MovieInfoPage = () => {
                     width={20}
                     height={20}
                     className={`${
-                      mode === "light" ? "" : "invert-colors"
+                      mode === "dark" ? "" : "invert-colors"
                     } ml-3 mr-2`}
                   />
                   <p className="md:mr-2 hover:text-primary">{genre.name}</p>

@@ -22,8 +22,14 @@ export default function UserDropdown({ user }: { user: UserProps }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar className="size-8 md:size-10 mt-1 md:mt-0 focus:ring-0">
-          <AvatarImage src={`https://gravatar.com/avatar/${gravatarHash}`} />
+        <Avatar className="size-8 md:size-10 mt-1 md:mt-0">
+          <AvatarImage
+            src={
+              user.avatar.tmdb.avatar_path
+                ? `https://image.tmdb.org/t/p/w500/${user.avatar.tmdb.avatar_path}`
+                : `https://gravatar.com/avatar/${gravatarHash}?s=200`
+            }
+          />
           <AvatarFallback>{""}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

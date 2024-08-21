@@ -1,5 +1,4 @@
 import { RootState } from "@/app/store";
-import genreIcons from "./../../../public/assets/icons/genres";
 import { categories } from "@/constants";
 import { selectGenreOrCategory } from "@/features/currentGenreOrCategory";
 import { useGetGenresQuery } from "@/services/TMDB";
@@ -7,6 +6,7 @@ import { GenreProps } from "@/types";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Separator } from "../ui/separator";
+import genreIcons from "./../../../public/assets/icons/genres";
 
 const LeftSidebar = () => {
   const genreIdOrCategoryName = useSelector(
@@ -104,7 +104,7 @@ const LeftSidebar = () => {
                   width={20}
                   height={20}
                   className={`${
-                    isActive ? "invert-colors" : ""
+                    isActive ? "" : "invert-colors"
                   } sm:mx-auto lg:mx-0`}
                 />
                 <p
