@@ -18,11 +18,11 @@ const Movie = ({ movie, index }: Props) => {
       <Link to={`/movies/${movie.id}`}>
         <img
           alt={movie.title}
-          className="rounded-lg lg:h-[300px] mb-4 md:hover:scale-105"
+          className="rounded-lg lg:h-[300px] mb-4 md:hover:scale-105 mx-auto"
           src={
             movie.poster_path
               ? `https://image.tmdb.org/t/p/w500/${movie.poster_path}`
-              : "https://www.filmurray.com/200/500"
+              : "/assets/images/movie-placeholder.webp"
           }
         ></img>
         <p className="overflow-auto mb-1">{movie.title}</p>

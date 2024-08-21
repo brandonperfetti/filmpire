@@ -1,4 +1,5 @@
 import MovieList from "@/components/shared/MovieList";
+import Pagination from "@/components/shared/Pagination";
 import Rating from "@/components/shared/Rating";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,13 +21,14 @@ import {
   Minus,
   Plus,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import genreIcons from "./../../public/assets/icons/genres";
 
 const MovieInfoPage = () => {
   const { id } = useParams();
+  const [page, setPage] = useState(1);
   const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -45,16 +47,26 @@ const MovieInfoPage = () => {
     data: recommendationsData,
     isFetching: isRecommendationsFetching,
     isError: isRecommendationsError,
-  } = useGetRecommendationsQuery(id);
+  } = useGetRecommendationsQuery({ id, page });
 
   console.log("Recomendations Data", recommendationsData);
 
+  const topMoviesRef = useRef<HTMLDivElement>(null);
+  const navbarHeight = 125;
+
+  useEffect(() => {
+    if (topMoviesRef.current) {
+      const topPosition =
+        topMoviesRef.current.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({
+        top: topPosition - navbarHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [page]);
+
   if (isFetching || isRecommendationsFetching)
-    return (
-      <div className="flex justify-center items-center">
-        Loading...
-      </div>
-    );
+    return <div className="flex justify-center items-center">Loading...</div>;
   if (isError || isRecommendationsError)
     return <Link to={"/"}>Something Has Gone Wrong, Go Home</Link>;
 
@@ -74,7 +86,11 @@ const MovieInfoPage = () => {
       <div className="grid justify-around grid-cols-1 md:grid-cols-3">
         <div>
           <img
-            src={`https://image.tmdb.org/t/p/w500/${movieData?.poster_path}`}
+            src={
+              movieData.poster_path
+                ? `https://image.tmdb.org/t/p/w500/${movieData.poster_path}`
+                : "/assets/images/movie-placeholder.webp"
+            }
             alt={movieData?.title}
             className="rounded-2xl shadow-2xl sm:my-0 mx-auto md:mx-0 h-auto md:w-[80%]"
           />
@@ -150,9 +166,13 @@ const MovieInfoPage = () => {
                         style={{ animationDelay: delay }}
                       >
                         <img
-                          src={`https://image.tmdb.org/t/p/w500/${castMember.profile_path}`}
+                          src={
+                            castMember.profile_path
+                              ? `https://image.tmdb.org/t/p/w500/${castMember.profile_path}`
+                              : "/assets/images/actor-placeholder.webp"
+                          }
                           alt={castMember.name}
-                          className="rounded-lg shadow-2xl h-40 w-28 md:hover:scale-105"
+                          className="rounded-lg shadow-2xl h-40 w-28 md:hover:scale-105 object-cover"
                         />
                         <p className="text-center overflow-auto mt-3 mb-1 text-dark100_light900">
                           {castMember.name}
@@ -222,7 +242,7 @@ const MovieInfoPage = () => {
         </div>
       </div>
       {recommendationsData.results.length > 0 && (
-        <div className="mt-5 w-full">
+        <div className="mt-5 md:mt-12 w-full" ref={topMoviesRef}>
           <h3 className="h3-semibold text-dark100_light900">
             You might also like
           </h3>
@@ -231,6 +251,11 @@ const MovieInfoPage = () => {
               <MovieList movies={recommendationsData} numberOfMovies={12} />
             </div>
           )}
+          <Pagination
+            pageNumber={page}
+            setPage={setPage}
+            totalPages={recommendationsData?.total_pages}
+          />
         </div>
       )}
       <Dialog open={isDialogOpen} onOpenChange={() => setIsDialogOpen(false)}>

@@ -1,12 +1,13 @@
 import { RootState } from "@/app/store";
 import MovieList from "@/components/shared/MovieList";
+import Pagination from "@/components/shared/Pagination";
 import { getLabelOrGenreName } from "@/lib/utils";
 import { useGetGenresQuery, useGetMoviesQuery } from "@/services/TMDB";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 
 const MoviesPage = () => {
-  // const [page, setpage] = useState(1);
-  const page = 1;
+  const [page, setPage] = useState(1);
 
   const searchQuery = useSelector(
     (state: RootState) => state.currentGenreOrCategory.searchQuery,
@@ -67,6 +68,13 @@ const MoviesPage = () => {
       )}
       <div className="background-light900_dark200 md:p-6 rounded-lg shadow-light100_dark100">
         <MovieList movies={data} />
+        <div className="mt-4 md:mt-0">
+          <Pagination
+            pageNumber={page}
+            setPage={setPage}
+            totalPages={data.total_pages}
+          />
+        </div>
       </div>
     </>
   );
