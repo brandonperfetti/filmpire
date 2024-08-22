@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import LeftSidebar from "./components/shared/LeftSidebar";
 import Navbar from "./components/shared/navbar/Navbar";
 import { Toaster } from "./components/ui/toaster";
-import { ActorInfo, Actors, MovieInfo, Movies, Profile } from "./pages";
+import { ActorInfo, Actors, MovieInfo, Movies, Profile, Approved } from "./pages";
 
 function App() {
   return (
@@ -17,6 +17,7 @@ function App() {
             <Route path="/actors" element={<Actors />} />
             <Route path="/actors/:id" element={<ActorInfo />} />
             <Route path="/profile/:id" element={<Profile />} />
+            <Route path="/approved" element={<Approved />} />
           </Routes>
           <Toaster />
         </main>

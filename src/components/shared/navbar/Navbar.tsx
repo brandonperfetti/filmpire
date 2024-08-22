@@ -17,12 +17,13 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!token) {
-      // console.log("User is not authenticated, skipping login process.");
-      return;
-    }
     const logInUser = async () => {
-      if (token) {
+      if (!token || isAuthenticated) {
+        // No token or user already authenticated, no need to proceed
+        return;
+      }
+
+      try {
         if (sessionIdFromLocalStorage) {
           const { data: userData } = await moviesApi.get(
             `/account?session_id=${sessionIdFromLocalStorage}`,
@@ -30,15 +31,20 @@ const Navbar = () => {
           dispatch(setUser(userData));
         } else {
           const sessionId = await createSessionId();
-          const { data: userData } = await moviesApi.get(
-            `/account?session_id=${sessionId}`,
-          );
-          dispatch(setUser(userData));
+          if (sessionId) {
+            const { data: userData } = await moviesApi.get(
+              `/account?session_id=${sessionId}`,
+            );
+            dispatch(setUser(userData));
+          }
         }
+      } catch (error) {
+        console.error("Failed to log in user:", error);
       }
     };
+
     logInUser();
-  }, [dispatch, token, sessionIdFromLocalStorage]);
+  }, [dispatch, token, sessionIdFromLocalStorage, isAuthenticated]);
 
   return (
     <nav className="flex-between background-light900_dark200 fixed z-50 w-full gap-5 p-6 shadow-light-300 dark:shadow-none sm:px-12">

@@ -2,6 +2,7 @@ import { categories } from "@/constants";
 import { GenreProps } from "@/types";
 import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -104,14 +105,33 @@ export function getLabelOrGenreName(
 }
 export const navbarHeight = 125;
 
-export const scrollToElement = (ref: React.RefObject<HTMLDivElement>, navbarHeight?: number) => {
-
+export const scrollToElement = (
+  ref: React.RefObject<HTMLDivElement>,
+  navbarHeight?: number,
+) => {
   const offset = navbarHeight || 0; // Use the provided navbar height or default to 0
   if (ref.current) {
-    const topPosition = ref.current.getBoundingClientRect().top + window.scrollY;
+    const topPosition =
+      ref.current.getBoundingClientRect().top + window.scrollY;
     window.scrollTo({
       top: topPosition - offset,
       behavior: "smooth",
     });
   }
+};
+
+export function useDebounceValue<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
 }

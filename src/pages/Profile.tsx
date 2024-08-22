@@ -84,7 +84,7 @@ const ProfilePage = () => {
 
   return (
     <>
-      <h1 className="h1-bold mb-8 text-dark100_light900">My Profile</h1>
+      <h1 className="h1-bold mb-2 md:mb-6 text-dark100_light900">My Profile</h1>
       <div className="background-light900_dark200 p-2 md:p-6 rounded-lg shadow-light100_dark100 h-full">
         <div className="flex flex-col-reverse items-start justify-between sm:flex-row">
           <div className="flex flex-col items-start gap-4 lg:flex-row">

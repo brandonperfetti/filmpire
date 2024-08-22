@@ -44,7 +44,7 @@ const NavContent = () => {
     <section className="flex h-full flex-col gap-6 pt-8">
       <div className="flex flex-col gap-3"></div>
       <Separator className="-mt-9" />
-      Categories
+      <div className="h3-bold">Categories</div>
       {categories.map((item) => {
         const isActive = genreIdOrCategoryName === item.value;
 
@@ -76,7 +76,7 @@ const NavContent = () => {
         );
       })}
       <Separator />
-      Genres
+      <div className="h3-bold">Genres</div>
       {data.genres.map(({ name, id }: GenreProps) => {
         const isActive = genreIdOrCategoryName === (id as unknown);
 
@@ -99,7 +99,7 @@ const NavContent = () => {
                 alt={genreIcons[name.toLowerCase() as keyof typeof genreIcons]}
                 width={20}
                 height={20}
-                className={`${isActive ? "invert-colors" : ""}`}
+                className={`${isActive ? "" : "invert-colors"}`}
               />
               <p className={`${isActive ? "base-bold" : "base-medium"}`}>
                 {name}
@@ -120,12 +120,13 @@ const MobileNav = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!token) {
-      // console.log("User is not authenticated, skipping login process.");
-      return;
-    }
     const logInUser = async () => {
-      if (token) {
+      if (!token || isAuthenticated) {
+        // No token or user already authenticated, no need to proceed
+        return;
+      }
+
+      try {
         if (sessionIdFromLocalStorage) {
           const { data: userData } = await moviesApi.get(
             `/account?session_id=${sessionIdFromLocalStorage}`,
@@ -133,15 +134,20 @@ const MobileNav = () => {
           dispatch(setUser(userData));
         } else {
           const sessionId = await createSessionId();
-          const { data: userData } = await moviesApi.get(
-            `/account?session_id=${sessionId}`,
-          );
-          dispatch(setUser(userData));
+          if (sessionId) {
+            const { data: userData } = await moviesApi.get(
+              `/account?session_id=${sessionId}`,
+            );
+            dispatch(setUser(userData));
+          }
         }
+      } catch (error) {
+        console.error("Failed to log in user:", error);
       }
     };
+
     logInUser();
-  }, [dispatch, token, sessionIdFromLocalStorage]);
+  }, [dispatch, token, sessionIdFromLocalStorage, isAuthenticated]);
 
   return (
     <Sheet>
