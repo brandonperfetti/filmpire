@@ -1,21 +1,21 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch } from "react";
 import { Button } from "../ui/button";
 
 interface PaginationProps {
   pageNumber: number;
   totalPages: number;
-  setPage: Dispatch<SetStateAction<number>>;
+  setPage: Dispatch<number>;
 }
 
 const Pagination = ({ pageNumber, totalPages, setPage }: PaginationProps) => {
   const handlePrev = () => {
-    if (pageNumber !== 1) {
-      setPage((prev: number) => prev - 1);
+    if (pageNumber > 1) {
+      setPage(pageNumber - 1);
     }
   };
   const handleNext = () => {
-    if (pageNumber !== totalPages) {
-      setPage((prev: number) => prev + 1);
+    if (pageNumber < totalPages) {
+      setPage(pageNumber + 1);
     }
   };
 

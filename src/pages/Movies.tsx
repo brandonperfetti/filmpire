@@ -1,13 +1,17 @@
 import { RootState } from "@/app/store";
 import MovieList from "@/components/shared/MovieList";
 import Pagination from "@/components/shared/Pagination";
+import { setPage } from "@/features/currentGenreOrCategory";
 import { getLabelOrGenreName } from "@/lib/utils";
 import { useGetGenresQuery, useGetMoviesQuery } from "@/services/TMDB";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const MoviesPage = () => {
-  const [page, setPage] = useState(1);
+  const dispatch = useDispatch();
+
+  const page = useSelector(
+    (state: RootState) => state.currentGenreOrCategory.page,
+  );
 
   const searchQuery = useSelector(
     (state: RootState) => state.currentGenreOrCategory.searchQuery,
@@ -71,7 +75,7 @@ const MoviesPage = () => {
         <div className="mt-4 md:mt-0">
           <Pagination
             pageNumber={page}
-            setPage={setPage}
+            setPage={(newPage) => dispatch(setPage(newPage))}
             totalPages={data.total_pages}
           />
         </div>

@@ -1,6 +1,6 @@
 import { RootState } from "@/app/store";
 import { categories } from "@/constants";
-import { selectGenreOrCategory } from "@/features/currentGenreOrCategory";
+import { selectGenreOrCategory, setPage } from "@/features/currentGenreOrCategory";
 import { useGetGenresQuery } from "@/services/TMDB";
 import { GenreProps } from "@/types";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,6 +29,12 @@ const LeftSidebar = () => {
 
   if (error) return <div>An error occurred</div>;
 
+  const handleClick = (value: string | number) => {
+    dispatch(selectGenreOrCategory(value));
+    dispatch(setPage(1)); // Reset the page to 1
+    window.scrollTo(0, 0);
+  };
+
   return (
     <>
       <section className="background-light900_dark200 light-border custom-scrollbar sticky left-0 top-0 flex h-dvh flex-col justify-between overflow-y-auto border-r p-6 pt-36 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]">
@@ -40,10 +46,7 @@ const LeftSidebar = () => {
             return (
               <Link
                 to={"/"}
-                onClick={() => {
-                  dispatch(selectGenreOrCategory(category.value));
-                  window.scrollTo(0, 0);
-                }}
+                onClick={() => handleClick(category.value)}
                 key={category.label}
                 className={`${
                   isActive
