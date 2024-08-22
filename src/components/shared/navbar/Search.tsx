@@ -20,12 +20,14 @@ const Search = () => {
   }, [setSearchTerm, dispatch]);
 
   useEffect(() => {
-    if (debouncedSearchTerm) {
+    if (debouncedSearchTerm === "") {
+      clearSearch();
+    } else if (debouncedSearchTerm) {
       dispatch(searchMovie(debouncedSearchTerm));
       navigate("/");
       window.scrollTo(0, 0);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearchTerm]);
 
   useEffect(() => {

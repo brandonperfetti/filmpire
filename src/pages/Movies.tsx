@@ -1,4 +1,5 @@
 import { RootState } from "@/app/store";
+import FeaturedMovie from "@/components/shared/FeaturedMovie";
 import MovieList from "@/components/shared/MovieList";
 import Pagination from "@/components/shared/Pagination";
 import { setPage } from "@/features/currentGenreOrCategory";
@@ -72,8 +73,11 @@ const MoviesPage = () => {
       ) : (
         <h1 className="h1-bold mb-2 md:mb-6 text-dark100_light900">Filmpire</h1>
       )}
+      {data?.results[0].backdrop_path && (
+        <FeaturedMovie movie={data?.results[0]} />
+      )}
       <div className="background-light900_dark200 md:p-6 rounded-lg shadow-light100_dark100">
-        <MovieList movies={data} />
+        <MovieList movies={data} numberOfMovies={16} excludeFirst />
         <div className="mt-4 md:mt-0">
           <Pagination
             pageNumber={page}

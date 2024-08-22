@@ -39,6 +39,7 @@ export interface MovieResponseProps {
 export interface MovieListProps {
   movies: MovieResponseProps;
   numberOfMovies?: number;
+  excludeFirst?: boolean;
 }
 
 export interface AvatarGravatarProps {
