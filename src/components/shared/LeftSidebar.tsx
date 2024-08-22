@@ -21,9 +21,8 @@ const LeftSidebar = () => {
 
   if (!data?.genres.length)
     return (
-      <div className="flex align-bottom">
-        <h4>No movies found</h4>
-        <p>Please search for something else</p>
+      <div>
+        <h4>No genres found</h4>
       </div>
     );
 
@@ -31,7 +30,7 @@ const LeftSidebar = () => {
 
   const handleClick = (value: string | number) => {
     dispatch(selectGenreOrCategory(value));
-    dispatch(setPage(1)); // Reset the page to 1
+    dispatch(setPage(1));
     window.scrollTo(0, 0);
   };
 

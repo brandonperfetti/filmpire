@@ -42,13 +42,15 @@ const MoviesPage = () => {
 
   if (!data?.results.length)
     return (
-      <div className="flex flex-col items-center justify-center">
-        <h4 className="h3-semibold mb-2 text-dark100_light900">
-          No movies found
-        </h4>
-        <p className="paragraph-regular text-dark300_light700">
-          Please search for something else
-        </p>
+      <div className="w-full">
+        <div>
+          <p className="p-4 base-medium text-center">
+            No movie found {searchQuery && "for the search term"} <br />
+            {searchQuery && (
+              <span className="font-bold text-primary"> "{searchQuery}" </span>
+            )}
+          </p>
+        </div>
       </div>
     );
 

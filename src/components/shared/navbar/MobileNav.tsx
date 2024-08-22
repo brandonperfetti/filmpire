@@ -32,9 +32,8 @@ const NavContent = () => {
 
   if (!data?.genres.length)
     return (
-      <div className="flex align-bottom">
-        <h4>No movies found</h4>
-        <p>Please search for something else</p>
+      <div>
+        <h4>No genres found</h4>
       </div>
     );
 
