@@ -8,7 +8,7 @@ const FeaturedMovie = ({ movie }: Props) => {
   if (!movie) return null;
 
   return (
-    <div className="relative h-[490px] mb-2 md:mb-6 flex justify-center">
+    <div className="relative h-[490px] mb-3 md:mb-6 flex justify-center">
       <Link to={`/movies/${movie.id}`} className="no-underline w-full h-full">
         <div className="w-full h-full flex justify-end flex-col">
           <img
@@ -21,8 +21,10 @@ const FeaturedMovie = ({ movie }: Props) => {
         </div>
         {/* Overlay text */}
         <div className="absolute bottom-4 left-4 text-white z-10">
-          <h3 className="text-xl font-bold">{movie.title}</h3>
-          <p className="text-sm mt-2 max-w-lg">{movie.overview}</p>
+          <h3 className="h3-bold">{movie.title}</h3>
+          <p className="body-regular mt-2 max-w-80 md:max-w-lg">
+            {movie.overview}
+          </p>
         </div>
       </Link>
     </div>

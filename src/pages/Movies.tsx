@@ -67,17 +67,17 @@ const MoviesPage = () => {
   return (
     <>
       {labelOrGenreName ? (
-        <h1 className="h1-bold mb-2 md:mb-6 text-dark100_light900">
+        <h1 className="h1-bold mb-3 md:mb-6 text-dark100_light900">
           {labelOrGenreName} Films
         </h1>
       ) : (
-        <h1 className="h1-bold mb-2 md:mb-6 text-dark100_light900">Filmpire</h1>
+        <h1 className="h1-bold mb-3 md:mb-6 text-dark100_light900">Filmpire</h1>
       )}
       {data?.results[0].backdrop_path && (
         <FeaturedMovie movie={data?.results[0]} />
       )}
       <div className="background-light900_dark200 md:p-6 rounded-lg shadow-light100_dark100">
-        <MovieList movies={data} numberOfMovies={16} excludeFirst />
+        <MovieList movies={data} numberOfMovies={17} excludeFirst />
         <div className="mt-4 md:mt-0">
           <Pagination
             pageNumber={page}

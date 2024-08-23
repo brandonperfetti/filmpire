@@ -73,7 +73,7 @@ const Search = () => {
         type="text"
         placeholder=" ⌘K to Search..."
         value={searchTerm}
-        className="text-sm md:paragraph-regular no-focus placeholder text-dark400_light700 border-none bg-transparent shadow-none outline-none"
+        className="text-md md:paragraph-regular no-focus placeholder text-dark400_light700 border-none bg-transparent shadow-none outline-none"
         onChange={(e: ChangeEvent<HTMLInputElement>) =>
           setSearchTerm(e.target.value)
         }
