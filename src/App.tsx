@@ -1,35 +1,28 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Route, Routes } from "react-router-dom";
+import LeftSidebar from "./components/shared/LeftSidebar";
+import Navbar from "./components/shared/navbar/Navbar";
+import { Toaster } from "./components/ui/toaster";
+import { ActorInfo, MovieInfo, Movies, Profile, Approved } from "./pages";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="background-light850_dark100 relative">
+      <Navbar />
+      <div className="flex">
+        <LeftSidebar />
+        <main className="flex min-h-dvh flex-1 flex-col px-4 md:px-6 pb-6 pt-24 md:pt-32 max-md:pb-14 sm:px-14">
+          <Routes>
+            <Route path="/" element={<Movies />} />
+            <Route path="/movies/:id" element={<MovieInfo />} />
+            <Route path="/actors/:id" element={<ActorInfo />} />
+            <Route path="/profile/:id" element={<Profile />} />
+            <Route path="/approved" element={<Approved />} />
+          </Routes>
+          <Toaster />
+        </main>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
