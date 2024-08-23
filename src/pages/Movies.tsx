@@ -76,7 +76,7 @@ const MoviesPage = () => {
       {data?.results[0].backdrop_path && (
         <FeaturedMovie movie={data?.results[0]} />
       )}
-      <div className="background-light900_dark200 md:p-6 rounded-lg shadow-light100_dark100">
+      <div className="background-light900_dark200 p-2 md:p-6 rounded-lg shadow-light100_dark100">
         <MovieList movies={data} numberOfMovies={17} excludeFirst />
         <div className="mt-4 md:mt-0">
           <Pagination
