@@ -13,7 +13,7 @@ const ActorInfoPage = () => {
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
   const { data, isFetching, isError } = useGetActorQuery(id);
-  console.log("Actor Data", data);
+  // console.log("Actor Data", data);
 
   const actorData = data as ActorDetailsProps;
 
@@ -21,7 +21,7 @@ const ActorInfoPage = () => {
     id,
     page,
   });
-  console.log("Movies by Actor Data", moviesByActorData);
+  // console.log("Movies by Actor Data", moviesByActorData);
 
   const topMoviesRef = useRef<HTMLDivElement>(null);
 
