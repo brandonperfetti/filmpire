@@ -1,7 +1,13 @@
 import MovieList from "@/components/shared/MovieList";
 import Pagination from "@/components/shared/Pagination";
+import ActorInfoPageSkeleton from "@/components/skeletons/ActorInfoPageSkeleton";
 import { Button } from "@/components/ui/button";
-import { getAge, getPrettyDate, navbarHeight, scrollToElement } from "@/lib/utils";
+import {
+  getAge,
+  getPrettyDate,
+  navbarHeight,
+  scrollToElement,
+} from "@/lib/utils";
 import { useGetActorQuery, useGetMoviesByActorQuery } from "@/services/TMDB";
 import { ActorDetailsProps } from "@/types";
 import { ArrowLeft, Clapperboard } from "lucide-react";
@@ -31,8 +37,7 @@ const ActorInfoPage = () => {
     }
   }, [page]);
 
-  if (isFetching)
-    return <div className="flex justify-center items-center">Loading...</div>;
+  if (isFetching) return <ActorInfoPageSkeleton />;
   if (isError)
     return (
       <Button onClick={() => navigate(-1)}>

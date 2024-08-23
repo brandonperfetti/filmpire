@@ -2,6 +2,7 @@ import { RootState } from "@/app/store";
 import FeaturedMovie from "@/components/shared/FeaturedMovie";
 import MovieList from "@/components/shared/MovieList";
 import Pagination from "@/components/shared/Pagination";
+import MoviesPageSkeleton from "@/components/skeletons/MoviesPageSkeleton";
 import { setPage } from "@/features/currentGenreOrCategory";
 import { getLabelOrGenreName } from "@/lib/utils";
 import { useGetGenresQuery, useGetMoviesQuery } from "@/services/TMDB";
@@ -38,8 +39,7 @@ const MoviesPage = () => {
     genreData?.genres || [],
   );
 
-  if (isFetching || isFetchingGenre)
-    return <div className="flex justify-center items-center ">Loading...</div>;
+  if (isFetching || isFetchingGenre) return <MoviesPageSkeleton />;
 
   if (!data?.results.length)
     return (

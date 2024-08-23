@@ -32,6 +32,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import genreIcons from "./../../public/assets/icons/genres";
+import MovieInfoPageSkeleton from "@/components/skeletons/MovieInfoPageSkeleton";
 
 const MovieInfoPage = () => {
   const { user } = useSelector(userSelector);
@@ -146,7 +147,7 @@ const MovieInfoPage = () => {
   };
 
   if (isFetching || isRecommendationsFetching)
-    return <div className="flex justify-center items-center">Loading...</div>;
+    return <MovieInfoPageSkeleton />;
   if (isError || isRecommendationsError)
     return <Link to={"/"}>Something Has Gone Wrong, Go Home</Link>;
 
