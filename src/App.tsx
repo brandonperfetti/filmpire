@@ -1,10 +1,14 @@
+import { useRef } from "react";
 import { Route, Routes } from "react-router-dom";
+import useAlan from "./components/shared/alan";
 import LeftSidebar from "./components/shared/LeftSidebar";
 import Navbar from "./components/shared/navbar/Navbar";
 import { Toaster } from "./components/ui/toaster";
-import { ActorInfo, MovieInfo, Movies, Profile, Approved } from "./pages";
+import { ActorInfo, Approved, MovieInfo, Movies, Profile } from "./pages";
 
 function App() {
+  const alanBtnContainer = useRef({} as HTMLDivElement);
+  useAlan(alanBtnContainer);
   return (
     <div className="background-light850_dark100 relative">
       <Navbar />
@@ -20,6 +24,7 @@ function App() {
           </Routes>
           <Toaster />
         </main>
+        <div ref={alanBtnContainer} />
       </div>
     </div>
   );

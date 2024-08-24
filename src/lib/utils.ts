@@ -135,3 +135,6 @@ export function useDebounceValue<T>(value: T, delay: number): T {
 
   return debouncedValue;
 }
+
+export const alanAiKey = import.meta.env.VITE_ALANAI_API_KEY;
+
