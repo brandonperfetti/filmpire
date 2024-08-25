@@ -5,6 +5,13 @@ import WatchProviders from "@/components/shared/WatchProviders";
 import MovieInfoPageSkeleton from "@/components/skeletons/MovieInfoPageSkeleton";
 import { Button } from "@/components/ui/button";
 import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -38,6 +45,7 @@ import {
   Heart,
   Minus,
   Plus,
+  Video,
 } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -51,59 +59,43 @@ const MovieInfoPage = () => {
 
   const [page, setPage] = useState(1);
   const [isPaginationTriggered, setIsPaginationTriggered] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isTrailerDialogOpen, setIsTrailerDialogOpen] = useState(false);
+  const [isVideosDialogOpen, setIsVideosDialogOpen] = useState(false);
   const [isMovieFavorited, setIsMovieFavorited] = useState(false);
   const [isMovieWatchlisted, setIsMovieWatchlisted] = useState(false);
 
   const { data, isFetching, isError } = useGetMovieQuery(id);
-
-  // console.log("Movie Data", data);
-
   const {
-    data: watchProvidesrData,
+    data: watchProvidersData,
     isFetching: isFetchingwatchProviders,
     isError: isWatchProvidersError,
   } = useGetMovieWatchProvidersQuery(id);
-
   const userCountry = useCountry() || "";
-  // console.log("User Country", userCountry);
-
-  // Get the preferred spoken language
   const preferredLanguage = getPreferredLanguage(
     data?.spoken_languages || [],
     userCountry,
   );
-
-  // Get the preferred release date
   const preferredReleaseDate = getPreferredReleaseDate(
     data?.release_dates?.results || [],
     userCountry,
   );
-
-  console.log("Preferred Release Date", preferredReleaseDate);
-
   const formattedReleaseDate = preferredReleaseDate
     ? getPrettyDate(preferredReleaseDate.release_date)
     : "N/A";
-
   const filteredWatchProviders: WatchProviderProps =
-    watchProvidesrData?.results?.[userCountry] || {};
-  // console.log("Filtered Watch Providers", filteredWatchProviders);
-
+    watchProvidersData?.results?.[userCountry] || {};
   const { data: favoriteMovies } = useGetListQuery({
     listName: "favorite/movies",
     accountId: user?.id,
     sessionId: localStorage?.getItem("session_id"),
     page: 1,
   });
-
   const { data: watchlistMovies } = useGetListQuery({
     listName: "watchlist/movies",
     accountId: user?.id,
     sessionId: localStorage?.getItem("session_id"),
     page: 1,
   });
-
   const {
     data: recommendationsData,
     isFetching: isRecommendationsFetching,
@@ -142,8 +134,6 @@ const MovieInfoPage = () => {
     setIsMovieFavorited((prev) => !prev);
   };
 
-  // console.log({ isMovieWatchlisted });
-
   const addToWatchlist = async () => {
     await axios.post(
       `https://api.themoviedb.org/3/account/${
@@ -161,16 +151,11 @@ const MovieInfoPage = () => {
   };
 
   const movieData = data as MovieDetailsProps;
-  // console.log("movieData", movieData);
   const preferredTrailer = getPreferredTrailer(
     movieData?.videos?.results || [],
   );
-  // console.log("Preferred Trailer", preferredTrailer);
-
   const { mode } = useTheme();
-
   const dispatch = useDispatch();
-
   const topMoviesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -323,60 +308,72 @@ const MovieInfoPage = () => {
             {filteredWatchProviders.link && (
               <WatchProviders filteredWatchProviders={filteredWatchProviders} />
             )}
-            <div className="grid xl:flex gap-4">
-              <div>
-                <div className="space-x-2">
-                  <Link to={movieData?.homepage || ""}>
-                    <Button variant="outline">
-                      <Globe color="red" className="mr-2 size-4" />
-                      Website
-                    </Button>
-                  </Link>
-
-                  <Link to={`https://imdb.com/title/${movieData?.imdb_id}`}>
-                    <Button variant="outline">
-                      <Clapperboard color="red" className="mr-2 size-4" />
-                      IMDB
-                    </Button>
-                  </Link>
+            <div className="grid xl:flex gap-4 flex-wrap">
+              <div className="space-y-4 md:space-y-0 md:flex md:space-x-2">
+                <Link to={movieData?.homepage || ""}>
+                  <Button variant="outline" className="w-full md:w-auto">
+                    <Globe color="red" className="mr-2 size-4" />
+                    Website
+                  </Button>
+                </Link>
+                <Link to={`https://imdb.com/title/${movieData?.imdb_id}`}>
                   <Button
                     variant="outline"
-                    onClick={() => setIsDialogOpen(true)}
+                    className="w-full md:w-auto mt-4 md:mt-0"
                   >
-                    <Film color="red" className="mr-2 size-4" /> Trailer
+                    <Clapperboard color="red" className="mr-2 size-4" />
+                    IMDB
                   </Button>
-                </div>
+                </Link>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsTrailerDialogOpen(true)}
+                  className="w-full md:w-auto"
+                >
+                  <Film color="red" className="mr-2 size-4" /> Trailer
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsVideosDialogOpen(true)}
+                  className="w-full md:w-auto"
+                >
+                  <Video color="red" className="mr-2 size-4" /> Videos
+                </Button>
               </div>
-              <div className="grid">
-                <div className="space-x-2 flex">
-                  {user && (
-                    <>
-                      <Button
-                        variant={isMovieFavorited ? "destructive" : "outline"}
-                        onClick={addToFavorites}
-                      >
-                        <Heart
-                          color={isMovieFavorited ? "white" : "red"}
-                          className="mr-2 size-4"
-                        />{" "}
-                        {isMovieFavorited ? "Unfavorite" : "Add to Favorites"}
-                      </Button>
-                      <Button
-                        variant={isMovieWatchlisted ? "destructive" : "outline"}
-                        onClick={addToWatchlist}
-                      >
-                        {isMovieWatchlisted ? (
-                          <Minus color={"white"} className="mr-2 size-4" />
-                        ) : (
-                          <Plus color={"red"} className="mr-2 size-4" />
-                        )}
-                        Watchlist
-                      </Button>
-                    </>
-                  )}
-                </div>
+              <div className="space-y-4 md:space-y-0 md:flex md:space-x-2 ">
+                {user && (
+                  <>
+                    <Button
+                      variant={isMovieFavorited ? "destructive" : "outline"}
+                      onClick={addToFavorites}
+                      className="w-full md:w-auto"
+                    >
+                      <Heart
+                        color={isMovieFavorited ? "white" : "red"}
+                        className="mr-2 size-4"
+                      />{" "}
+                      {isMovieFavorited ? "Unfavorite" : "Add to Favorites"}
+                    </Button>
+                    <Button
+                      variant={isMovieWatchlisted ? "destructive" : "outline"}
+                      onClick={addToWatchlist}
+                      className="w-full md:w-auto"
+                    >
+                      {isMovieWatchlisted ? (
+                        <Minus color={"white"} className="mr-2 size-4" />
+                      ) : (
+                        <Plus color={"red"} className="mr-2 size-4" />
+                      )}
+                      Watchlist
+                    </Button>
+                  </>
+                )}
               </div>
-              <Button variant="outline" onClick={() => navigate(-1)}>
+              <Button
+                variant="outline"
+                onClick={() => navigate(-1)}
+                className="w-full md:w-auto mt-4 md:mt-0"
+              >
                 <ArrowLeft color={"red"} className="mr-2 size-4" /> Back
               </Button>
             </div>
@@ -400,7 +397,45 @@ const MovieInfoPage = () => {
           />
         </div>
       )}
-      <Dialog open={isDialogOpen} onOpenChange={() => setIsDialogOpen(false)}>
+      {/* Videos Dialog */}
+      <Dialog
+        open={isVideosDialogOpen}
+        onOpenChange={() => setIsVideosDialogOpen(false)}
+      >
+        <DialogContent className="max-w-[80%] max-h-[80vh]">
+          <DialogHeader>
+            <DialogTitle>Watch {movieData.title} Videos</DialogTitle>
+          </DialogHeader>
+          {movieData?.videos?.results?.length > 0 ? (
+            <div className="relative">
+              <Carousel>
+                <CarouselPrevious />
+                <CarouselContent className="space-x-4 max-w-[16rem] md:max-w-[26rem] lg:max-w-[73rem]">
+                  {movieData.videos.results.map((video) => (
+                    <CarouselItem key={video.id} className="relative">
+                      <iframe
+                        className="w-fit md:w-full h-[300px] md:h-[500px] rounded"
+                        title={video.name}
+                        src={`https://www.youtube.com/embed/${video.key}`}
+                        allow="fullscreen"
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselNext />
+              </Carousel>
+            </div>
+          ) : (
+            <p className="text-dark400_light800">No Videos Available</p>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Trailer Dialog */}
+      <Dialog
+        open={isTrailerDialogOpen}
+        onOpenChange={() => setIsTrailerDialogOpen(false)}
+      >
         <DialogContent className="max-w-[80%] max-h-[80vh]">
           <DialogHeader>
             <DialogTitle>Watch {movieData.title} Trailer</DialogTitle>
