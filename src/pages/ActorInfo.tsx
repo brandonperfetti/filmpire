@@ -46,7 +46,7 @@ const ActorInfoPage = () => {
     );
 
   return (
-    <div className="md:background-light900_dark200 py-2 md:p-6 rounded-lg shadow-light100_dark100">
+    <div className="background-light900_dark200 p-2 md:p-6 rounded-lg shadow-light100_dark100">
       <div className="grid justify-around grid-cols-1 md:grid-cols-3">
         <div>
           <img
@@ -77,7 +77,7 @@ const ActorInfoPage = () => {
                 <h5 className="mt-3 h3-semibold text-dark100_light900">
                   Biography
                 </h5>
-                <p className="my-6 paragraph-regular text-dark400_light800">
+                <p className="my-6 p-4 paragraph-regular text-dark400_light800">
                   {actorData.biography}
                 </p>
               </>

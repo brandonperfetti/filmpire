@@ -151,7 +151,7 @@ const MovieInfoPage = () => {
     return <Link to={"/"}>Something Has Gone Wrong, Go Home</Link>;
 
   return (
-    <div className="md:background-light900_dark200 py-2 md:p-6 rounded-lg shadow-light100_dark100">
+    <div className="background-light900_dark200 p-2 md:p-6 rounded-lg shadow-light100_dark100">
       <div className="grid justify-around grid-cols-1 md:grid-cols-3">
         <div>
           <img
@@ -216,13 +216,13 @@ const MovieInfoPage = () => {
               ))}
             </div>
             <h5 className="h3-semibold mt-6 text-dark100_light900">Overview</h5>
-            <p className="my-6 paragraph-regular text-dark400_light800">
+            <p className="my-6 p-4 overflow-auto paragraph-regular text-dark400_light800">
               {movieData.overview}
             </p>
             <h5 className=" h3-semibold mt-6 text-dark100_light900">
               Top cast
             </h5>
-            <div className="grid grid-cols-3 xl:grid-cols-6 gap-2 md:gap-4 my-6">
+            <div className="grid grid-cols-3 xl:grid-cols-6 gap-2 md:gap-4 my-6 p-4 oveflow-auto">
               {movieData &&
                 movieData.credits?.cast
                   ?.map((castMember, index) => {
@@ -305,12 +305,11 @@ const MovieInfoPage = () => {
                       </Button>
                     </>
                   )}
-
-                  <Button variant="outline" onClick={() => navigate(-1)}>
-                    <ArrowLeft color={"red"} className="mr-2 size-4" /> Back
-                  </Button>
                 </div>
               </div>
+              <Button variant="outline" onClick={() => navigate(-1)}>
+                <ArrowLeft color={"red"} className="mr-2 size-4" /> Back
+              </Button>
             </div>
           </div>
         </div>
