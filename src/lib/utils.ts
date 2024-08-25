@@ -2,7 +2,6 @@ import { categories } from "@/constants";
 import { GenreProps } from "@/types";
 import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
-import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -119,19 +118,3 @@ export const scrollToElement = (
     });
   }
 };
-
-export function useDebounceValue<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-}

@@ -1,6 +1,7 @@
 import MovieList from "@/components/shared/MovieList";
 import Pagination from "@/components/shared/Pagination";
 import Rating from "@/components/shared/Rating";
+import WatchProviders from "@/components/shared/WatchProviders";
 import MovieInfoPageSkeleton from "@/components/skeletons/MovieInfoPageSkeleton";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,13 +13,15 @@ import {
 import { useTheme } from "@/context/useTheme";
 import { userSelector } from "@/features/auth";
 import { selectGenreOrCategory } from "@/features/currentGenreOrCategory";
+import useCountry from "@/hooks/useCountry";
 import { scrollToElement, tmdbApiKey } from "@/lib/utils";
 import {
   useGetListQuery,
   useGetMovieQuery,
+  useGetMovieWatchProvidersQuery,
   useGetRecommendationsQuery,
 } from "@/services/TMDB";
-import { MovieDetailsProps, MovieProps } from "@/types";
+import { MovieDetailsProps, MovieProps, WatchProviderProps } from "@/types";
 import axios from "axios";
 import {
   ArrowLeft,
@@ -46,6 +49,19 @@ const MovieInfoPage = () => {
   const [isMovieWatchlisted, setIsMovieWatchlisted] = useState(false);
 
   const { data, isFetching, isError } = useGetMovieQuery(id);
+
+  const {
+    data: watchProvidesrData,
+    isFetching: isFetchingwatchProviders,
+    isError: isWatchProvidersError,
+  } = useGetMovieWatchProvidersQuery(id);
+
+  const userCountry = useCountry() || "";
+  // console.log("User Country", userCountry);
+
+  const filteredWatchProviders: WatchProviderProps =
+    watchProvidesrData?.results?.[userCountry] || {};
+  // console.log("Filtered Watch Providers", filteredWatchProviders);
 
   const { data: favoriteMovies } = useGetListQuery({
     listName: "favorite/movies",
@@ -117,16 +133,11 @@ const MovieInfoPage = () => {
     setIsMovieWatchlisted((prev) => !prev);
   };
 
-  // console.log("Movie Data", data);
-
   const movieData = data as MovieDetailsProps;
+  // console.log("movieData", movieData);
   const { mode } = useTheme();
 
-  // console.log("Mode", mode);
-
   const dispatch = useDispatch();
-
-  // console.log("Recomendations Data", recommendationsData);
 
   const topMoviesRef = useRef<HTMLDivElement>(null);
 
@@ -146,8 +157,9 @@ const MovieInfoPage = () => {
     setIsPaginationTriggered(true);
   };
 
-  if (isFetching || isRecommendationsFetching) return <MovieInfoPageSkeleton />;
-  if (isError || isRecommendationsError)
+  if (isFetching || isRecommendationsFetching || isFetchingwatchProviders)
+    return <MovieInfoPageSkeleton />;
+  if (isError || isRecommendationsError || isWatchProvidersError)
     return <Link to={"/"}>Something Has Gone Wrong, Go Home</Link>;
 
   return (
@@ -246,7 +258,7 @@ const MovieInfoPage = () => {
                         <p className="text-center overflow-auto mt-3 mb-1 text-dark100_light900">
                           {castMember.name}
                         </p>
-                        <p className="text-center text-dark300_light700">
+                        <p className="text-center text-dark300_light700 body-regular">
                           {castMember.character.split("/")[0]}
                         </p>
                       </Link>
@@ -254,6 +266,9 @@ const MovieInfoPage = () => {
                   })
                   .slice(0, 6)}
             </div>
+            {filteredWatchProviders.link && (
+              <WatchProviders filteredWatchProviders={filteredWatchProviders} />
+            )}
             <div className="grid xl:flex gap-4">
               <div>
                 <div className="space-x-2">

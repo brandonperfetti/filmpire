@@ -190,3 +190,17 @@ export interface ActorDetailsProps {
   popularity: number;
   profile_path: string | null;
 }
+
+export interface WatchProvider {
+  display_priority: number;
+  logo_path: string;
+  provider_id: number;
+  provider_name: string;
+}
+
+export interface WatchProviderProps {
+  link: string;
+  buy?: WatchProvider[];
+  rent?: WatchProvider[];
+  flatrate?: WatchProvider[];
+}
