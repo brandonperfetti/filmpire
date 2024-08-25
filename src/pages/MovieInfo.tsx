@@ -14,7 +14,7 @@ import { useTheme } from "@/context/useTheme";
 import { userSelector } from "@/features/auth";
 import { selectGenreOrCategory } from "@/features/currentGenreOrCategory";
 import useCountry from "@/hooks/useCountry";
-import { scrollToElement, tmdbApiKey } from "@/lib/utils";
+import { getPreferredLanguage, scrollToElement, tmdbApiKey } from "@/lib/utils";
 import {
   useGetListQuery,
   useGetMovieQuery,
@@ -50,6 +50,8 @@ const MovieInfoPage = () => {
 
   const { data, isFetching, isError } = useGetMovieQuery(id);
 
+  // console.log("Movie Data", data);
+
   const {
     data: watchProvidesrData,
     isFetching: isFetchingwatchProviders,
@@ -57,7 +59,13 @@ const MovieInfoPage = () => {
   } = useGetMovieWatchProvidersQuery(id);
 
   const userCountry = useCountry() || "";
-  // console.log("User Country", userCountry);
+  console.log("User Country", userCountry);
+
+  // Get the preferred spoken language
+  const preferredLanguage = getPreferredLanguage(
+    data?.spoken_languages || [],
+    userCountry,
+  );
 
   const filteredWatchProviders: WatchProviderProps =
     watchProvidesrData?.results?.[userCountry] || {};
@@ -192,7 +200,7 @@ const MovieInfoPage = () => {
               <div className="text-dark300_light700">
                 {movieData?.runtime} min /{" "}
                 {movieData?.spoken_languages.length > 0
-                  ? movieData?.spoken_languages[0].english_name
+                  ? preferredLanguage
                   : ""}
               </div>
             </div>

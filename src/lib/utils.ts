@@ -1,5 +1,5 @@
 import { categories } from "@/constants";
-import { GenreProps } from "@/types";
+import { GenreProps, SpokenLanguageProps } from "@/types";
 import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -117,4 +117,34 @@ export const scrollToElement = (
       behavior: "smooth",
     });
   }
+};
+
+export const getPreferredLanguage = (
+  spokenLanguages: SpokenLanguageProps[],
+  userCountry: string,
+): string => {
+  // Normalize the userCountry to match the ISO 639-1 language codes
+  const normalizedCountry = userCountry.toLowerCase();
+
+  // Check for a language that matches the user's country
+  const matchingLanguage = spokenLanguages.find(
+    (language) => language.iso_639_1.toLowerCase() === normalizedCountry,
+  );
+
+  // If a match is found, return the corresponding language
+  if (matchingLanguage) {
+    return matchingLanguage.english_name;
+  }
+
+  // Default to English if it's available in the spokenLanguages array
+  const englishLanguage = spokenLanguages.find(
+    (language) => language.iso_639_1.toLowerCase() === "en",
+  );
+
+  if (englishLanguage) {
+    return englishLanguage.english_name;
+  }
+
+  // If no match is found and English isn't available, return the first language in the array
+  return spokenLanguages.length > 0 ? spokenLanguages[0].english_name : "N/A";
 };
