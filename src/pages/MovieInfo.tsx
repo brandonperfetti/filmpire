@@ -14,7 +14,14 @@ import { useTheme } from "@/context/useTheme";
 import { userSelector } from "@/features/auth";
 import { selectGenreOrCategory } from "@/features/currentGenreOrCategory";
 import useCountry from "@/hooks/useCountry";
-import { getPreferredLanguage, scrollToElement, tmdbApiKey } from "@/lib/utils";
+import {
+  getPreferredLanguage,
+  getPreferredReleaseDate,
+  getPreferredTrailer,
+  getPrettyDate,
+  scrollToElement,
+  tmdbApiKey,
+} from "@/lib/utils";
 import {
   useGetListQuery,
   useGetMovieQuery,
@@ -59,13 +66,25 @@ const MovieInfoPage = () => {
   } = useGetMovieWatchProvidersQuery(id);
 
   const userCountry = useCountry() || "";
-  console.log("User Country", userCountry);
+  // console.log("User Country", userCountry);
 
   // Get the preferred spoken language
   const preferredLanguage = getPreferredLanguage(
     data?.spoken_languages || [],
     userCountry,
   );
+
+  // Get the preferred release date
+  const preferredReleaseDate = getPreferredReleaseDate(
+    data?.release_dates?.results || [],
+    userCountry,
+  );
+
+  console.log("Preferred Release Date", preferredReleaseDate);
+
+  const formattedReleaseDate = preferredReleaseDate
+    ? getPrettyDate(preferredReleaseDate.release_date)
+    : "N/A";
 
   const filteredWatchProviders: WatchProviderProps =
     watchProvidesrData?.results?.[userCountry] || {};
@@ -143,6 +162,11 @@ const MovieInfoPage = () => {
 
   const movieData = data as MovieDetailsProps;
   // console.log("movieData", movieData);
+  const preferredTrailer = getPreferredTrailer(
+    movieData?.videos?.results || [],
+  );
+  // console.log("Preferred Trailer", preferredTrailer);
+
   const { mode } = useTheme();
 
   const dispatch = useDispatch();
@@ -234,6 +258,28 @@ const MovieInfoPage = () => {
                   <p className="md:mr-2 hover:text-primary">{genre.name}</p>
                 </Link>
               ))}
+            </div>
+            {/* Display release date and note */}
+            <div className="text-center mt-4 text-dark400_light800">
+              {preferredReleaseDate && (
+                <p className="paragraph-regular">
+                  Released: {formattedReleaseDate}{" "}
+                  {preferredReleaseDate?.note && (
+                    <span>/ {preferredReleaseDate.note}</span>
+                  )}
+                </p>
+              )}
+
+              {/* Display rating and budget */}
+              {movieData?.budget > 0 && (
+                <p>Budget: ${movieData?.budget?.toLocaleString()}</p>
+              )}
+              {preferredReleaseDate && (
+                <p className="paragraph-regular">
+                  {preferredReleaseDate.certification &&
+                    `Rated: ${preferredReleaseDate.certification}`}
+                </p>
+              )}
             </div>
             <h5 className="h3-semibold mt-6 text-dark100_light900">Overview</h5>
             <p className="my-6 p-4 overflow-auto paragraph-regular text-dark400_light800">
@@ -355,15 +401,15 @@ const MovieInfoPage = () => {
         </div>
       )}
       <Dialog open={isDialogOpen} onOpenChange={() => setIsDialogOpen(false)}>
-        <DialogContent>
+        <DialogContent className="max-w-[80%] max-h-[80vh]">
           <DialogHeader>
             <DialogTitle>Watch {movieData.title} Trailer</DialogTitle>
           </DialogHeader>
           {movieData?.videos?.results?.length > 0 ? (
             <iframe
-              className="w-full h-96 rounded"
+              className="w-full h-64 md:h-[600px] rounded"
               title="Trailer"
-              src={`https://www.youtube.com/embed/${movieData?.videos?.results[0].key}?autoplay=1`}
+              src={`https://www.youtube.com/embed/${preferredTrailer?.key}?autoplay=1`}
               allow="autoplay; fullscreen"
             />
           ) : (

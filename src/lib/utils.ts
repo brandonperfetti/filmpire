@@ -1,5 +1,11 @@
 import { categories } from "@/constants";
-import { GenreProps, SpokenLanguageProps } from "@/types";
+import {
+  GenreProps,
+  ReleaseDateProps,
+  ReleaseDatesResultProps,
+  SpokenLanguageProps,
+  VideoProps,
+} from "@/types";
 import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -69,10 +75,15 @@ export function getAge(birthdate: string): number {
 }
 
 export function getPrettyDate(dateString: string): string {
-  const [year, month, day] = dateString.split("-").map(Number);
+  let date: Date;
 
-  // Create a date object using the specific year, month, and day
-  const date = new Date(Date.UTC(year, month - 1, day + 1)); // month - 1 because months are 0-indexed
+  // Check if the date string includes a time component (e.g., "2024-07-22T00:00:00.000Z")
+  if (dateString.includes("T")) {
+    date = new Date(dateString);
+  } else {
+    const [year, month, day] = dateString.split("-").map(Number);
+    date = new Date(Date.UTC(year, month - 1, day));
+  }
 
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -148,3 +159,54 @@ export const getPreferredLanguage = (
   // If no match is found and English isn't available, return the first language in the array
   return spokenLanguages.length > 0 ? spokenLanguages[0].english_name : "N/A";
 };
+
+export const getPreferredReleaseDate = (
+  releaseDates: ReleaseDatesResultProps[],
+  userCountry: string,
+): ReleaseDateProps | undefined => {
+  // Normalize the userCountry to match the ISO 3166-1 country codes
+  const normalizedCountry = userCountry.toUpperCase();
+
+  // Check for a release date that matches the user's country
+  const matchingCountryRelease = releaseDates.find(
+    (result) => result.iso_3166_1 === normalizedCountry,
+  );
+
+  if (
+    matchingCountryRelease &&
+    matchingCountryRelease.release_dates.length > 0
+  ) {
+    return matchingCountryRelease.release_dates[0];
+  }
+
+  // Default to US if it's available
+  const usRelease = releaseDates.find((result) => result.iso_3166_1 === "US");
+
+  if (usRelease && usRelease.release_dates.length > 0) {
+    return usRelease.release_dates[0];
+  }
+
+  // Return undefined if no match is found
+  return undefined;
+};
+
+export function getPreferredTrailer(videos: VideoProps[]): VideoProps | undefined {
+  if (!videos || videos.length === 0) return undefined;
+
+  // Look for "Official Trailer"
+  const officialTrailer = videos.find((video) =>
+    video.name.toLowerCase().includes("official trailer"),
+  );
+
+  // If no "Official Trailer", look for any "Trailer"
+  if (!officialTrailer) {
+    const trailer = videos.find((video) =>
+      video.name.toLowerCase().includes("trailer"),
+    );
+
+    return trailer || videos[0];
+  }
+
+  return officialTrailer;
+}
+

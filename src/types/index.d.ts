@@ -204,3 +204,17 @@ export interface WatchProviderProps {
   rent?: WatchProvider[];
   flatrate?: WatchProvider[];
 }
+
+interface ReleaseDateProps {
+  certification: string;
+  descriptors: string[];
+  iso_639_1: string;
+  note: string;
+  release_date: string;
+  type: number;
+}
+
+interface ReleaseDatesResultProps {
+  iso_3166_1: string;
+  release_dates: ReleaseDate[];
+}
