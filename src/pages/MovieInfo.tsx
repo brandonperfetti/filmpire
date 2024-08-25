@@ -1,6 +1,7 @@
 import MovieList from "@/components/shared/MovieList";
 import Pagination from "@/components/shared/Pagination";
 import Rating from "@/components/shared/Rating";
+import MovieInfoPageSkeleton from "@/components/skeletons/MovieInfoPageSkeleton";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -32,7 +33,6 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import genreIcons from "./../../public/assets/icons/genres";
-import MovieInfoPageSkeleton from "@/components/skeletons/MovieInfoPageSkeleton";
 
 const MovieInfoPage = () => {
   const { user } = useSelector(userSelector);
@@ -146,13 +146,12 @@ const MovieInfoPage = () => {
     setIsPaginationTriggered(true);
   };
 
-  if (isFetching || isRecommendationsFetching)
-    return <MovieInfoPageSkeleton />;
+  if (isFetching || isRecommendationsFetching) return <MovieInfoPageSkeleton />;
   if (isError || isRecommendationsError)
     return <Link to={"/"}>Something Has Gone Wrong, Go Home</Link>;
 
   return (
-    <div className="background-light900_dark200 p-2 md:p-6 rounded-lg shadow-light100_dark100">
+    <div className="md:background-light900_dark200 p-1 md:p-6 rounded-lg shadow-light100_dark100">
       <div className="grid justify-around grid-cols-1 md:grid-cols-3">
         <div>
           <img

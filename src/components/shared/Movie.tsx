@@ -28,10 +28,10 @@ const Movie = ({ movie, index }: Props) => {
         <p className="overflow-auto mb-1">{movie.title}</p>
         <Tooltip>
           <TooltipTrigger>
-            <Rating value={movie.vote_average / 2} precision={0.1} />
+            <Rating value={movie?.vote_average / 2} precision={0.1} />
           </TooltipTrigger>
           <TooltipContent>
-            <p>{(movie.vote_average / 2).toFixed(2)} / 5 Stars</p>
+            <p>{(movie?.vote_average / 2).toFixed(2)} / 5 Stars</p>
           </TooltipContent>
         </Tooltip>
       </Link>
