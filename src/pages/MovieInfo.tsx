@@ -407,7 +407,7 @@ const MovieInfoPage = () => {
           </DialogHeader>
           {movieData?.videos?.results?.length > 0 ? (
             <iframe
-              className="w-full h-64 md:h-[600px] rounded"
+              className="w-full py-4 h-64 md:h-[600px] rounded"
               title="Trailer"
               src={`https://www.youtube.com/embed/${preferredTrailer?.key}?autoplay=1`}
               allow="autoplay; fullscreen"
