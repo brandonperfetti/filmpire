@@ -315,7 +315,7 @@ const MovieInfoPage = () => {
         </div>
       </div>
       {recommendationsData.results.length > 0 && (
-        <div className="mt-5 md:mt-12 w-full" ref={topMoviesRef}>
+        <div className="my-5 md:mt-12 w-full" ref={topMoviesRef}>
           <h3 className="h3-semibold text-dark100_light900">
             You might also like
           </h3>

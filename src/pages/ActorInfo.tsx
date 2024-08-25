@@ -101,7 +101,7 @@ const ActorInfoPage = () => {
           </div>
         </div>
       </div>
-      <div className="mt-5 md:mt-12 w-full" ref={topMoviesRef}>
+      <div className="my-5 md:mt-12 w-full" ref={topMoviesRef}>
         <h3 className="h3-semibold text-dark100_light900"> Top Movies</h3>
         {moviesByActorData ? (
           <div className="my-6">
