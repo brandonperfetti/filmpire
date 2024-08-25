@@ -222,7 +222,7 @@ const MovieInfoPage = () => {
             <h5 className=" h3-semibold mt-6 text-dark100_light900">
               Top cast
             </h5>
-            <div className="grid grid-cols-3 xl:grid-cols-6 gap-4 my-6">
+            <div className="grid grid-cols-3 xl:grid-cols-6 gap-2 md:gap-4 my-6">
               {movieData &&
                 movieData.credits?.cast
                   ?.map((castMember, index) => {
