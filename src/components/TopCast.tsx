@@ -68,7 +68,7 @@ const TopCast: React.FC<TopCastProps> = ({ cast }) => {
 
       {castEnd < cast.length && !loading && (
         <Button variant="secondary" onClick={loadMoreCast}>
-          Load More
+          Load More cast
         </Button>
       )}
     </div>

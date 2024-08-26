@@ -68,7 +68,7 @@ const TopCrew: React.FC<TopCrewProps> = ({ crew }) => {
 
       {crewEnd < crew.length && !loading && (
         <Button variant="secondary" onClick={loadMoreCrew}>
-          Load more Crew Members
+          Load more crew
         </Button>
       )}
     </div>
