@@ -14,7 +14,7 @@ const TopCrew: React.FC<TopCrewProps> = ({ crew }) => {
           const delay = `${index * 250}ms`;
           return (
             <Link
-              to={`/actors/${crewMember.id}`}
+              to={`/crew/${crewMember.id}`}
               key={`crew_member_${crewMember.id}`}
               className="flex flex-col items-center animate-grow opacity-0"
               style={{ animationDelay: delay }}

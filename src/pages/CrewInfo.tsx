@@ -1,6 +1,6 @@
 import MovieList from "@/components/shared/MovieList";
 import Pagination from "@/components/shared/Pagination";
-import ActorInfoPageSkeleton from "@/components/skeletons/ActorInfoPageSkeleton";
+import CrewMemberInfoPageSkeleton from "@/components/skeletons/CrewMemberInfoPageSkeleton";
 import { Button } from "@/components/ui/button";
 import {
   getAge,
@@ -8,26 +8,28 @@ import {
   navbarHeight,
   scrollToElement,
 } from "@/lib/utils";
-import { useGetMoviesByActorQuery, useGetPersonQuery } from "@/services/TMDB";
-import { CastMemberProps } from "@/types";
+import {
+  useGetMoviesByCrewMemberQuery,
+  useGetPersonQuery,
+} from "@/services/TMDB";
+import { CrewMemberProps } from "@/types";
 import { ArrowLeft, Clapperboard, Globe } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-const ActorInfoPage = () => {
+const CrewMemberInfoPage = () => {
   const { id } = useParams();
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
   const { data, isFetching, isError } = useGetPersonQuery(id);
 
-  const actorData = data as CastMemberProps;
-  // console.log("Actor Data", actorData);
+  const crewMemberData = data as CrewMemberProps;
+  // console.log("CrewMember Data", crewMemberData);
 
-  const { data: moviesByActorData } = useGetMoviesByActorQuery({
+  const { data: moviesByCrewMemberData } = useGetMoviesByCrewMemberQuery({
     id,
     page,
   });
-  // console.log("Movies by Actor Data", moviesByActorData);
 
   const topMoviesRef = useRef<HTMLDivElement>(null);
 
@@ -37,7 +39,7 @@ const ActorInfoPage = () => {
     }
   }, [page]);
 
-  if (isFetching) return <ActorInfoPageSkeleton />;
+  if (isFetching) return <CrewMemberInfoPageSkeleton />;
   if (isError)
     return (
       <Button onClick={() => navigate(-1)}>
@@ -45,7 +47,10 @@ const ActorInfoPage = () => {
       </Button>
     );
 
-  const actorAge = getAge(actorData?.birthday || "", actorData?.deathday || "");
+  const crewMemberAge = getAge(
+    crewMemberData?.birthday || "",
+    crewMemberData?.deathday || "",
+  );
 
   return (
     <div className="background-light900_dark200 p-2 md:p-6 rounded-lg shadow-light100_dark100">
@@ -53,51 +58,54 @@ const ActorInfoPage = () => {
         <div>
           <img
             src={
-              actorData.profile_path
-                ? `https://image.tmdb.org/t/p/w500/${actorData?.profile_path}`
+              crewMemberData.profile_path
+                ? `https://image.tmdb.org/t/p/w500/${crewMemberData?.profile_path}`
                 : "/assets/images/actor-placeholder.webp"
             }
-            alt={actorData?.name}
+            alt={crewMemberData?.name}
             className="rounded-2xl shadow-2xl sm:my-0 mx-auto md:mx-0 h-auto md:w-[80%]"
           />
         </div>
         <div className="grid col-span-2">
           <div className="my-4 md:my-0">
-            <h3 className="h1-bold mb-2 text-center">{actorData?.name}</h3>
-            {actorData.birthday && (
+            <h3 className="h1-bold mb-2 text-center">
+              {crewMemberData?.name}: {crewMemberData.known_for_department}
+            </h3>
+            {crewMemberData.birthday && (
               <>
                 <p className="text-center base-medium text-dark300_light900">
-                  Born {getPrettyDate(actorData?.birthday || "")}
+                  Born {getPrettyDate(crewMemberData?.birthday || "")}
                 </p>
-                {actorData?.place_of_birth && (
-                  <p className="text-center base-medium text-dark300_light900">
-                    {actorData?.place_of_birth}
+                {crewMemberData?.place_of_birth && (
+                  <p className="text-center base-medium text-dark300_light900 body-regular">
+                    {crewMemberData?.place_of_birth}
                   </p>
                 )}
-                {actorData.deathday && (
-                  <p className="text-center base-medium text-dark300_light900">
-                    Died {getPrettyDate(actorData?.deathday || "")}
+                {crewMemberData.deathday && (
+                  <p className="text-center base-medium text-dark300_light900 pt-4">
+                    Died {getPrettyDate(crewMemberData?.deathday || "")}
                   </p>
                 )}
-                <p className="text-center text-dark400_light800">
-                  {actorAge} years old
+                <p className="text-center text-dark400_light800 body-regular">
+                  {crewMemberAge} years old
                 </p>
               </>
             )}
-            {actorData.biography && (
+
+            {crewMemberData.biography && (
               <>
                 <h5 className="mt-3 h3-semibold text-dark100_light900">
                   Biography
                 </h5>
                 <p className="my-6 p-4 paragraph-regular text-dark400_light800">
-                  {actorData.biography}
+                  {crewMemberData.biography}
                 </p>
               </>
             )}
 
             <div className="flex w-full items-center justify-center gap-2 mt-2">
-              {actorData?.homepage && (
-                <Link to={actorData?.homepage || ""}>
+              {crewMemberData?.homepage && (
+                <Link to={crewMemberData?.homepage || ""}>
                   <Button
                     variant="outline"
                     className="w-full md:w-auto my-2 md:my-0"
@@ -107,7 +115,7 @@ const ActorInfoPage = () => {
                   </Button>
                 </Link>
               )}
-              <Link to={`https://imdb.com/name/${actorData?.imdb_id}`}>
+              <Link to={`https://imdb.com/name/${crewMemberData?.imdb_id}`}>
                 <Button variant="outline" className="flex items-center gap-2">
                   <Clapperboard color="red" className="mr-2" />
                   IMDB
@@ -126,9 +134,9 @@ const ActorInfoPage = () => {
       </div>
       <div className="my-5 md:mt-12 w-full" ref={topMoviesRef}>
         <h3 className="h3-semibold text-dark100_light900"> Top Movies</h3>
-        {moviesByActorData ? (
+        {moviesByCrewMemberData ? (
           <div className="my-6">
-            <MovieList movies={moviesByActorData} numberOfMovies={12} />
+            <MovieList movies={moviesByCrewMemberData} numberOfMovies={12} />
           </div>
         ) : (
           <p className="text-dark400_light800">Sorry, nothing was found</p>
@@ -136,11 +144,11 @@ const ActorInfoPage = () => {
         <Pagination
           pageNumber={page}
           setPage={setPage}
-          totalPages={moviesByActorData?.total_pages}
+          totalPages={moviesByCrewMemberData?.total_pages}
         />
       </div>
     </div>
   );
 };
 
-export default ActorInfoPage;
+export default CrewMemberInfoPage;

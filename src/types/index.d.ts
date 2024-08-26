@@ -65,11 +65,18 @@ export interface BelongsToCollectionProps {
 
 export interface CastMemberProps {
   adult: boolean;
+  also_known_as: string[];
+  biography: string;
+  birthday: string | null;
+  deathday: string | null;
+  homepage: string | null;
   gender: number;
   id: number;
+  imdb_id: string;
   known_for_department: string;
   name: string;
   original_name: string;
+  place_of_birth: string | null;
   popularity: number;
   profile_path: string | null;
   cast_id: number;
@@ -80,14 +87,22 @@ export interface CastMemberProps {
 
 export interface CrewMemberProps {
   adult: boolean;
+  also_known_as: string[];
+  biography: string;
+  birthday: string | null;
+  deathday: string | null;
+  homepage: string | null;
   gender: number;
   id: number;
+  imdb_id: string;
   known_for_department: string;
   name: string;
   original_name: string;
+  place_of_birth: string | null;
   popularity: number;
   profile_path: string | null;
   credit_id: string;
+  order: number;
   department: string[];
   job: string[];
 }
@@ -218,23 +233,6 @@ export interface ReviewProps {
   content: string;
   id: string;
   url: string;
-}
-
-export interface ActorDetailsProps {
-  adult: boolean;
-  also_known_as: string[];
-  biography: string;
-  birthday: string | null;
-  deathday: string | null;
-  gender: number;
-  homepage: string | null;
-  id: number;
-  imdb_id: string;
-  known_for_department: string;
-  name: string;
-  place_of_birth: string | null;
-  popularity: number;
-  profile_path: string | null;
 }
 
 export interface WatchProvider {

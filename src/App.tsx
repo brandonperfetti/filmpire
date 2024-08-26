@@ -3,7 +3,7 @@ import Footer from "./components/shared/Footer";
 import LeftSidebar from "./components/shared/LeftSidebar";
 import Navbar from "./components/shared/navbar/Navbar";
 import { Toaster } from "./components/ui/toaster";
-import { ActorInfo, Approved, MovieInfo, Movies, Profile } from "./pages";
+import { ActorInfo, Approved, CrewInfo, MovieInfo, Movies, Profile } from "./pages";
 
 function App() {
   return (
@@ -16,6 +16,7 @@ function App() {
             <Route path="/" element={<Movies />} />
             <Route path="/movies/:id" element={<MovieInfo />} />
             <Route path="/actors/:id" element={<ActorInfo />} />
+            <Route path="/crew/:id" element={<CrewInfo />} />
             <Route path="/profile/:id" element={<Profile />} />
             <Route path="/approved" element={<Approved />} />
           </Routes>
