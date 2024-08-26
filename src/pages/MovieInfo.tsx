@@ -1,4 +1,5 @@
 import ImageCarouselItem from "@/components/shared/ImageCarouselItem";
+import LazyVideo from "@/components/shared/LazyVideo";
 import MovieButtons from "@/components/shared/MovieButtons";
 import MovieList from "@/components/shared/MovieList";
 import Pagination from "@/components/shared/Pagination";
@@ -326,7 +327,7 @@ const MovieInfoPage = () => {
         open={isBackdropsDialogOpen} // Open state for backdrops dialog
         onOpenChange={() => setIsBackdropsDialogOpen(false)}
       >
-        <DialogContent className="max-w-[80%] max-h-[80vh]">
+        <DialogContent className="max-w-[90%] md:max-w-[75%] lg:max-w-[65%] max-h-[90vh]">
           <DialogHeader>
             <DialogTitle>{movieData.title} Wallpapers</DialogTitle>
           </DialogHeader>
@@ -334,10 +335,14 @@ const MovieInfoPage = () => {
             <div className="relative">
               <Carousel>
                 <CarouselPrevious />
-                <CarouselContent className="space-x-4 max-w-[18.5rem] md:max-w-[26rem]">
+                <CarouselContent className="space-x-4 xxs:max-w-[19rem] xs:max-w-[21rem] sm:max-w-[20rem] xl:max-w-[59em] max-h-[10em] lg:max-h-[40em] 2xl:max-w-[75.5em]">
                   {movieData.images.backdrops.map((backdrop) => (
-                    <CarouselItem key={backdrop.file_path}>
-                      <ImageCarouselItem image={backdrop} />
+                    <CarouselItem key={backdrop.file_path} className="w-full">
+                      <ImageCarouselItem
+                        image={backdrop}
+                        maxWidth={backdrop.width / 2}
+                        maxHeight={backdrop.height / 3}
+                      />
                     </CarouselItem>
                   ))}
                 </CarouselContent>
@@ -349,12 +354,13 @@ const MovieInfoPage = () => {
           )}
         </DialogContent>
       </Dialog>
+
       {/* Posters Dialog */}
       <Dialog
         open={isPostersDialogOpen} // Open state for posters dialog
         onOpenChange={() => setIsPostersDialogOpen(false)}
       >
-        <DialogContent className="max-w-[80%] max-h-[80vh]">
+        <DialogContent className="max-w-[85%] md:max-w-[59%] lg:max-w-[28rem] 2xl:max-w-[24%] max-h-[80vh]">
           <DialogHeader>
             <DialogTitle>{movieData.title} Posters</DialogTitle>
           </DialogHeader>
@@ -362,7 +368,7 @@ const MovieInfoPage = () => {
             <div className="relative">
               <Carousel>
                 <CarouselPrevious />
-                <CarouselContent className="space-x-4 max-w-[18.5rem] md:max-w-[26rem]">
+                <CarouselContent className="space-x-4 xxs:max-w-[18.5rem] xs:max-w-[21rem] sm:max-w-[20rem] md:max-w-[26em]">
                   {movieData.images.posters.map((poster) => (
                     <CarouselItem key={poster.file_path}>
                       <ImageCarouselItem image={poster} />
@@ -382,7 +388,7 @@ const MovieInfoPage = () => {
         open={isVideosDialogOpen}
         onOpenChange={() => setIsVideosDialogOpen(false)}
       >
-        <DialogContent className="max-w-[80%] max-h-[80vh]">
+        <DialogContent className="max-w-[85%] md:max-w-[50%] max-h-[80vh]">
           <DialogHeader>
             <DialogTitle>Watch {movieData.title} Videos</DialogTitle>
           </DialogHeader>
@@ -390,15 +396,10 @@ const MovieInfoPage = () => {
             <div className="relative">
               <Carousel>
                 <CarouselPrevious />
-                <CarouselContent className="space-x-4 max-w-[16rem] md:max-w-[26rem] lg:max-w-[73rem]">
+                <CarouselContent className="space-x-4 max-w-[18rem] md:max-w-[26rem] lg:max-w-[44rem] 2xl:max-w-[57.75rem]">
                   {movieData.videos.results.map((video) => (
                     <CarouselItem key={video.id} className="relative">
-                      <iframe
-                        className="w-fit md:w-full h-[300px] md:h-[500px] rounded"
-                        title={video.name}
-                        src={`https://www.youtube.com/embed/${video.key}`}
-                        allow="fullscreen"
-                      />
+                      <LazyVideo videoKey={video.key} title={video.name} />
                     </CarouselItem>
                   ))}
                 </CarouselContent>
@@ -416,7 +417,7 @@ const MovieInfoPage = () => {
         open={isTrailerDialogOpen}
         onOpenChange={() => setIsTrailerDialogOpen(false)}
       >
-        <DialogContent className="max-w-[80%] max-h-[80vh]">
+        <DialogContent className="max-w-[95%] md:max-w-[80%] max-h-[80vh]">
           <DialogHeader>
             <DialogTitle>Watch {movieData.title} Trailer</DialogTitle>
           </DialogHeader>
