@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { searchMovie } from "@/features/currentGenreOrCategory";
-import { useDebounceValue } from "@/lib/utils";
+import { useDebounceValue } from "@/hooks/useDebounceValue";
 import { X } from "lucide-react";
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";

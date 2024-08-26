@@ -22,6 +22,7 @@ const ActorInfoPage = () => {
   // console.log("Actor Data", data);
 
   const actorData = data as ActorDetailsProps;
+  // console.log("Actor Data", actorData);
 
   const { data: moviesByActorData } = useGetMoviesByActorQuery({
     id,

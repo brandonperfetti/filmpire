@@ -9,10 +9,16 @@ export const themes = [
 
 export const categories: CategoryProps[] = [
   {
-    label: "Popular",
-    value: "popular",
-    icon: "/assets/icons/popcorn.svg",
+    label: "Now Playing",
+    value: "now_playing",
+    icon: "/assets/icons/clapperboard.svg",
     route: "/",
+  },
+  {
+    label: "Upcoming",
+    value: "upcoming",
+    icon: "/assets/icons/calendar.svg",
+    route: "/movies/upcoming",
   },
   {
     label: "Top Rated",
@@ -21,10 +27,10 @@ export const categories: CategoryProps[] = [
     route: "/movies/top-rated",
   },
   {
-    label: "Upcoming",
-    value: "upcoming",
-    icon: "/assets/icons/calendar.svg",
-    route: "/movies/upcoming",
+    label: "Popular",
+    value: "popular",
+    icon: "/assets/icons/popcorn.svg",
+    route: "/",
   },
 ];
 

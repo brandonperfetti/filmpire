@@ -1,8 +1,9 @@
 import { Route, Routes } from "react-router-dom";
+import Footer from "./components/shared/Footer";
 import LeftSidebar from "./components/shared/LeftSidebar";
 import Navbar from "./components/shared/navbar/Navbar";
 import { Toaster } from "./components/ui/toaster";
-import { ActorInfo, MovieInfo, Movies, Profile, Approved } from "./pages";
+import { ActorInfo, Approved, MovieInfo, Movies, Profile } from "./pages";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           </Routes>
           <Toaster />
         </main>
+        <Footer />
       </div>
     </div>
   );
