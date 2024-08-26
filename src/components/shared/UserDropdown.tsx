@@ -12,6 +12,7 @@ import {
 } from "../ui/dropdown-menu";
 
 export default function UserDropdown({ user }: { user: UserProps }) {
+  const tmdbAvatarPath = user?.avatar?.tmdb?.avatar_path;
   const gravatarHash = user?.avatar?.gravatar?.hash;
 
   const logout = () => {
@@ -23,12 +24,15 @@ export default function UserDropdown({ user }: { user: UserProps }) {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar className="size-8 md:size-10 mt-1 md:mt-0">
-          <AvatarImage
+        <AvatarImage
             src={
-              user.avatar.tmdb.avatar_path
-                ? `https://image.tmdb.org/t/p/w500/${user.avatar.tmdb.avatar_path}`
-                : `https://gravatar.com/avatar/${gravatarHash}?s=200`
+              tmdbAvatarPath
+                ? `https://image.tmdb.org/t/p/w500/${tmdbAvatarPath}`
+                : gravatarHash
+                ? `https://www.gravatar.com/avatar/${gravatarHash}?s=200`
+                : `https://github.com/shadcn.png`
             }
+            alt="User Avatar"
           />
           <AvatarFallback>{""}</AvatarFallback>
         </Avatar>
