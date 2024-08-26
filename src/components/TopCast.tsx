@@ -1,16 +1,30 @@
 import { CastMemberProps } from "@/types";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Button } from "./ui/button";
+import { Skeleton } from "./ui/skeleton"; // Adjust the path if necessary
 
 interface TopCastProps {
   cast: CastMemberProps[];
 }
 
 const TopCast: React.FC<TopCastProps> = ({ cast }) => {
+  const [castEnd, setCastEnd] = useState(6);
+  const [loading, setLoading] = useState(false);
+
+  const loadMoreCast = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setCastEnd(castEnd + 6);
+      setLoading(false);
+    }, 1000); // Simulate a loading delay
+  };
+
   return (
-    <div>
+    <div className="mb-8">
       <h5 className="h3-semibold mt-6 text-dark100_light900">Top cast</h5>
-      <div className="grid grid-cols-3 xl:grid-cols-6 gap-2 md:gap-4 my-6 p-4 overflow-auto">
-        {cast.slice(0, 6).map((castMember, index) => {
+      <div className="grid grid-cols-3 xl:grid-cols-6 gap-2 md:gap-4 my-2 p-4 overflow-auto">
+        {cast.slice(0, castEnd).map((castMember, index) => {
           const delay = `${index * 250}ms`;
           return (
             <Link
@@ -37,7 +51,26 @@ const TopCast: React.FC<TopCastProps> = ({ cast }) => {
             </Link>
           );
         })}
+
+        {loading &&
+          // Render skeleton placeholders while loading
+          Array.from({ length: 6 }).map((_, index) => (
+            <div
+              key={`skeleton_cast_${index}`}
+              className="flex flex-col items-center"
+            >
+              <Skeleton className="h-40 w-28 rounded-lg" />
+              <Skeleton className="h-4 w-24 mt-3 rounded" />
+              <Skeleton className="h-4 w-16 mt-1 rounded" />
+            </div>
+          ))}
       </div>
+
+      {castEnd < cast.length && !loading && (
+        <Button variant="secondary" onClick={loadMoreCast}>
+          Load More
+        </Button>
+      )}
     </div>
   );
 };
