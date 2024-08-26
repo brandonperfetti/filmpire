@@ -6,7 +6,7 @@ const MovieList = ({
   numberOfMovies,
   excludeFirst,
 }: MovieListProps) => {
-  const hasBackdrop = movies.results[0].backdrop_path;
+  const hasBackdrop = movies.results[0]?.backdrop_path;
   const startFrom = hasBackdrop && excludeFirst ? 1 : 0;
   return (
     <ul

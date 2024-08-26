@@ -1,5 +1,6 @@
 import { categories } from "@/constants";
 import {
+  CrewMemberProps,
   GenreProps,
   ReleaseDateProps,
   ReleaseDatesResultProps,
@@ -56,8 +57,8 @@ export const createSessionId = async () => {
   }
 };
 
-export function getAge(birthdate: string): number {
-  const today = new Date();
+export function getAge(birthdate: string, deathdate?: string): number {
+  const today = deathdate ? new Date(deathdate) : new Date(); // Use deathdate if provided, otherwise use today's date
   const birthDate = new Date(birthdate);
 
   let age = today.getFullYear() - birthDate.getFullYear();
@@ -82,7 +83,7 @@ export function getPrettyDate(dateString: string): string {
     date = new Date(dateString);
   } else {
     const [year, month, day] = dateString.split("-").map(Number);
-    date = new Date(Date.UTC(year, month - 1, day));
+    date = new Date(Date.UTC(year, month - 1, day + 1));
   }
 
   const options: Intl.DateTimeFormatOptions = {
@@ -190,7 +191,9 @@ export const getPreferredReleaseDate = (
   return undefined;
 };
 
-export function getPreferredTrailer(videos: VideoProps[]): VideoProps | undefined {
+export function getPreferredTrailer(
+  videos: VideoProps[],
+): VideoProps | undefined {
   if (!videos || videos.length === 0) return undefined;
 
   // Look for "Official Trailer"
@@ -210,3 +213,61 @@ export function getPreferredTrailer(videos: VideoProps[]): VideoProps | undefine
   return officialTrailer;
 }
 
+export function mergeDuplicateCrewMembers(
+  crew: CrewMemberProps[],
+): CrewMemberProps[] {
+  const crewMap: Record<number, CrewMemberProps> = {};
+  const mergedCrew: CrewMemberProps[] = [];
+  const featuredJobs = ["Director", "Producer", "Writer"];
+
+  crew.forEach((member) => {
+    if (crewMap[member.id]) {
+      // If the member already exists in the map, merge the job and department
+      const existingMember = crewMap[member.id];
+
+      // Ensure jobs and departments are merged and unique
+      const mergedJobs = new Set<string>([
+        ...existingMember.job,
+        ...(Array.isArray(member.job) ? member.job : [member.job]),
+      ]);
+      const mergedDepartments = new Set<string>([
+        ...existingMember.department,
+        ...(Array.isArray(member.department)
+          ? member.department
+          : [member.department]),
+      ]);
+
+      existingMember.job = Array.from(mergedJobs);
+      existingMember.department = Array.from(mergedDepartments);
+    } else {
+      // If the member doesn't exist in the map, add them to the map and the result array
+      crewMap[member.id] = {
+        ...member,
+        job: Array.isArray(member.job) ? member.job : [member.job],
+        department: Array.isArray(member.department)
+          ? member.department
+          : [member.department],
+      };
+      mergedCrew.push(crewMap[member.id]);
+    }
+  });
+
+  // Format the jobs and departments as strings separated by commas
+  mergedCrew.forEach((member) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    member.job = member.job.join(", ") as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    member.department = member.department.join(", ") as any;
+  });
+
+  // Separate featured and non-featured members
+  const featuredCrew = mergedCrew.filter((member) =>
+    featuredJobs.some((job) => member.job.includes(job)),
+  );
+  const nonFeaturedCrew = mergedCrew.filter(
+    (member) => !featuredJobs.some((job) => member.job.includes(job)),
+  );
+
+  // Return the merged crew members with featured members first
+  return [...featuredCrew, ...nonFeaturedCrew];
+}
