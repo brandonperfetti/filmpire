@@ -57,6 +57,8 @@ import genreIcons from "./../../public/assets/icons/genres";
 
 const MovieInfoPage = () => {
   const { user } = useSelector(userSelector);
+  const userCountry = useCountry() || "";
+  // console.log("userCountry, ", userCountry);
   const { id } = useParams();
   const navigate = useNavigate();
   const { mode } = useTheme();
@@ -82,6 +84,14 @@ const MovieInfoPage = () => {
     isError: isWatchProvidersError,
   } = useGetMovieWatchProvidersQuery(id);
 
+  const filteredWatchProviders: WatchProviderProps =
+    watchProvidersData?.results?.[userCountry] ||
+    watchProvidersData?.results?.["US"] || // Fallback to 'US' if available
+    {};
+
+  // console.log(watchProvidersData);
+  // console.log(filteredWatchProviders);
+
   const { data: favoriteMovies } = useGetListQuery({
     listName: "favorite/movies",
     accountId: user?.id,
@@ -102,8 +112,6 @@ const MovieInfoPage = () => {
     isError: isRecommendationsError,
   } = useGetRecommendationsQuery({ id, page });
 
-  const userCountry = useCountry() || "";
-
   const preferredLanguage = getPreferredLanguage(
     data?.spoken_languages || [],
     userCountry,
@@ -121,9 +129,6 @@ const MovieInfoPage = () => {
   const formattedReleaseDate = preferredReleaseDate
     ? getPrettyDate(preferredReleaseDate.release_date)
     : "N/A";
-
-  const filteredWatchProviders: WatchProviderProps =
-    watchProvidersData?.results?.[userCountry] || {};
 
   const addToFavorites = async () => {
     await axios.post(
