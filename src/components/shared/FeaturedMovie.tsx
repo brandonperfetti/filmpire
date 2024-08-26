@@ -1,8 +1,8 @@
-import { MovieProps } from "@/types";
+import { MovieDetailsProps } from "@/types";
 import { Link } from "react-router-dom";
 
 interface Props {
-  movie: MovieProps;
+  movie: MovieDetailsProps;
 }
 const FeaturedMovie = ({ movie }: Props) => {
   if (!movie) return null;

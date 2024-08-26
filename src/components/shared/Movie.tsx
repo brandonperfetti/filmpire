@@ -1,10 +1,10 @@
-import { MovieProps } from "@/types";
+import { MovieDetailsProps } from "@/types";
 import { Link } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import Rating from "./Rating";
 
 interface Props {
-  movie: MovieProps;
+  movie: MovieDetailsProps;
   index: number;
 }
 
