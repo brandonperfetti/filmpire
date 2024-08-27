@@ -170,7 +170,7 @@ export interface MovieDetailsProps {
   production_countries: ProductionCountryProps[];
   release_date: string;
   release_dates: {
-    results: ReleaseDateProps[];
+    results: ReleaseDatesResultProps[];
   };
   revenue: number;
   reviews: {
@@ -220,14 +220,6 @@ export interface KeywordProps {
   name: string;
 }
 
-export interface ReleaseDateProps {
-  certification: string | null;
-  iso_639_1: string | null;
-  note: string | null;
-  release_date: string;
-  type: number;
-}
-
 export interface ReviewProps {
   author: string;
   content: string;
@@ -249,16 +241,23 @@ export interface WatchProviderProps {
   flatrate?: WatchProvider[];
 }
 
-interface ReleaseDateProps {
-  certification: string;
+export interface ReleaseDateProps {
+  certification: string | null;
   descriptors: string[];
-  iso_639_1: string;
-  note: string;
+  iso_639_1: string | null;
+  note: string | null;
   release_date: string;
   type: number;
 }
 
-interface ReleaseDatesResultProps {
+export interface ReleaseDatesResultProps {
   iso_3166_1: string;
-  release_dates: ReleaseDate[];
+  release_dates: ReleaseDateProps[];
+}
+
+export interface RecommendationsProps {
+  page: number;
+  results: MovieDetailsProps[];
+  total_pages: number;
+  total_results: number;
 }
