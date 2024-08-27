@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { MovieDetailsProps } from "@/types";
+import { MovieDetailsProps, UserProps } from "@/types";
 import {
   ArrowLeft,
   Clapperboard,
@@ -15,6 +15,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 
 interface MovieButtonsProps {
+  user: UserProps;
   movieData: MovieDetailsProps;
   isMovieFavorited: boolean;
   isMovieWatchlisted: boolean;
@@ -27,6 +28,7 @@ interface MovieButtonsProps {
 }
 
 const MovieButtons = ({
+  user,
   movieData,
   isMovieFavorited,
   isMovieWatchlisted,
@@ -133,31 +135,33 @@ const MovieButtons = ({
           <Wallpaper color="red" className="mr-2 size-4" /> Wallpapers
         </Button>
       </div>
-      <div className="space-y-4 md:space-y-0 md:flex md:space-x-2 ">
-        <Button
-          variant={isMovieFavorited ? "destructive" : "outline"}
-          onClick={addToFavorites}
-          className="w-full md:w-auto"
-        >
-          <Heart
-            color={isMovieFavorited ? "white" : "red"}
-            className="mr-2 size-4"
-          />
-          {isMovieFavorited ? "Unfavorite" : "Add to Favorites"}
-        </Button>
-        <Button
-          variant={isMovieWatchlisted ? "destructive" : "outline"}
-          onClick={addToWatchlist}
-          className="w-full md:w-auto"
-        >
-          {isMovieWatchlisted ? (
-            <Minus color={"white"} className="mr-2 size-4" />
-          ) : (
-            <Plus color={"red"} className="mr-2 size-4" />
-          )}
-          Watchlist
-        </Button>
-      </div>
+      {user && (
+        <div className="space-y-4 md:space-y-0 md:flex md:space-x-2 ">
+          <Button
+            variant={isMovieFavorited ? "destructive" : "outline"}
+            onClick={addToFavorites}
+            className="w-full md:w-auto"
+          >
+            <Heart
+              color={isMovieFavorited ? "white" : "red"}
+              className="mr-2 size-4"
+            />
+            {isMovieFavorited ? "Unfavorite" : "Add to Favorites"}
+          </Button>
+          <Button
+            variant={isMovieWatchlisted ? "destructive" : "outline"}
+            onClick={addToWatchlist}
+            className="w-full md:w-auto"
+          >
+            {isMovieWatchlisted ? (
+              <Minus color={"white"} className="mr-2 size-4" />
+            ) : (
+              <Plus color={"red"} className="mr-2 size-4" />
+            )}
+            Watchlist
+          </Button>
+        </div>
+      )}
       <Button
         variant="outline"
         onClick={() => navigate(-1)}

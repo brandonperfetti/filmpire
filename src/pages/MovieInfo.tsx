@@ -294,6 +294,7 @@ const MovieInfoPage = () => {
               <WatchProviders filteredWatchProviders={filteredWatchProviders} />
             )}
             <MovieButtons
+              user={user}
               movieData={movieData as MovieDetailsProps}
               isMovieFavorited={isMovieFavorited}
               isMovieWatchlisted={isMovieWatchlisted}
