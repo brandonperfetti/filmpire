@@ -12,7 +12,6 @@ import {
   useGetMoviesByCrewMemberQuery,
   useGetPersonQuery,
 } from "@/services/TMDB";
-import { CrewMemberProps } from "@/types";
 import { ArrowLeft, Clapperboard, Globe } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -21,13 +20,16 @@ const CrewMemberInfoPage = () => {
   const { id } = useParams();
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
-  const { data, isFetching, isError } = useGetPersonQuery(id);
+  const {
+    data: crewMemberData,
+    isFetching,
+    isError,
+  } = useGetPersonQuery(id || "");
 
-  const crewMemberData = data as CrewMemberProps;
   // console.log("CrewMember Data", crewMemberData);
 
   const { data: moviesByCrewMemberData } = useGetMoviesByCrewMemberQuery({
-    id,
+    id: id || "",
     page,
   });
 
@@ -58,7 +60,7 @@ const CrewMemberInfoPage = () => {
         <div>
           <img
             src={
-              crewMemberData.profile_path
+              crewMemberData?.profile_path
                 ? `https://image.tmdb.org/t/p/w500/${crewMemberData?.profile_path}`
                 : "/assets/images/actor-placeholder.webp"
             }
@@ -69,9 +71,9 @@ const CrewMemberInfoPage = () => {
         <div className="grid col-span-2">
           <div className="my-4 md:my-0">
             <h3 className="h1-bold mb-2 text-center">
-              {crewMemberData?.name}: {crewMemberData.known_for_department}
+              {crewMemberData?.name}: {crewMemberData?.known_for_department}
             </h3>
-            {crewMemberData.birthday && (
+            {crewMemberData?.birthday && (
               <>
                 <p className="text-center base-medium text-dark300_light900">
                   Born {getPrettyDate(crewMemberData?.birthday || "")}
@@ -92,7 +94,7 @@ const CrewMemberInfoPage = () => {
               </>
             )}
 
-            {crewMemberData.biography && (
+            {crewMemberData?.biography && (
               <>
                 <h5 className="mt-3 h3-semibold text-dark100_light900">
                   Biography
@@ -144,7 +146,7 @@ const CrewMemberInfoPage = () => {
         <Pagination
           pageNumber={page}
           setPage={setPage}
-          totalPages={moviesByCrewMemberData?.total_pages}
+          totalPages={moviesByCrewMemberData?.total_pages || 1}
         />
       </div>
     </div>

@@ -65,8 +65,7 @@ const MovieInfoPage = () => {
   const [isMovieFavorited, setIsMovieFavorited] = useState(false);
   const [isMovieWatchlisted, setIsMovieWatchlisted] = useState(false);
 
-  const { data, isFetching, isError } = useGetMovieQuery(id);
-  const movieData = data as MovieDetailsProps;
+  const { data: movieData, isFetching, isError } = useGetMovieQuery(id || "");
   // console.log(movieData);
 
   const topCast = movieData?.credits?.cast || [];
@@ -104,7 +103,8 @@ const MovieInfoPage = () => {
     data: recommendationsData,
     isFetching: isRecommendationsFetching,
     isError: isRecommendationsError,
-  } = useGetRecommendationsQuery({ id, page });
+  } = useGetRecommendationsQuery({ id: id || "", page });
+  // console.log(recommendationsData);
 
   const handlePageChange: Dispatch<SetStateAction<number>> = (newPage) => {
     if (typeof newPage === "number") {
@@ -116,12 +116,12 @@ const MovieInfoPage = () => {
   };
 
   const preferredLanguage = getPreferredLanguage(
-    data?.spoken_languages || [],
+    movieData?.spoken_languages || [],
     userCountry,
   );
 
   const preferredReleaseDate = getPreferredReleaseDate(
-    data?.release_dates?.results || [],
+    movieData?.release_dates?.results || [],
     userCountry,
   );
 
@@ -175,18 +175,18 @@ const MovieInfoPage = () => {
   useEffect(() => {
     setIsMovieFavorited(
       !!favoriteMovies?.results?.find(
-        (movie: MovieDetailsProps) => movie?.id === data?.id,
+        (movie: MovieDetailsProps) => movie?.id === movieData?.id,
       ),
     );
-  }, [favoriteMovies, data]);
+  }, [favoriteMovies, movieData]);
 
   useEffect(() => {
     setIsMovieWatchlisted(
       !!watchlistMovies?.results?.find(
-        (movie: MovieDetailsProps) => movie?.id === data?.id,
+        (movie: MovieDetailsProps) => movie?.id === movieData?.id,
       ),
     );
-  }, [watchlistMovies, data]);
+  }, [watchlistMovies, movieData]);
 
   if (isFetching || isRecommendationsFetching || isFetchingwatchProviders)
     return <MovieInfoPageSkeleton />;
@@ -199,8 +199,8 @@ const MovieInfoPage = () => {
         <div>
           <img
             src={
-              movieData.poster_path
-                ? `https://image.tmdb.org/t/p/w500/${movieData.poster_path}`
+              movieData?.poster_path
+                ? `https://image.tmdb.org/t/p/w500/${movieData?.poster_path}`
                 : "/assets/images/movie-placeholder.webp"
             }
             alt={movieData?.title}
@@ -215,18 +215,20 @@ const MovieInfoPage = () => {
             <h5 className="mb-2 text-center text-dark200_light900">
               {movieData?.tagline}
             </h5>
-            <div className="flex justify-center items-center flex-wrap gap-4">
-              <Rating value={movieData?.vote_average / 2} precision={0.1} />
-              <p className="text-dark300_light700">
-                {(movieData?.vote_average / 2).toFixed(2)} / 5{" "}
-              </p>
-              <div className="text-dark300_light700">
-                {movieData?.runtime} min /{" "}
-                {movieData?.spoken_languages.length > 0
-                  ? preferredLanguage
-                  : ""}
+            {movieData?.vote_average && (
+              <div className="flex justify-center items-center flex-wrap gap-4">
+                <Rating value={movieData?.vote_average / 2} precision={0.1} />
+                <p className="text-dark300_light700">
+                  {(movieData?.vote_average / 2).toFixed(2)} / 5{" "}
+                </p>
+                <div className="text-dark300_light700">
+                  {movieData?.runtime} min /{" "}
+                  {movieData?.spoken_languages.length > 0
+                    ? preferredLanguage
+                    : ""}
+                </div>
               </div>
-            </div>
+            )}
             <div className="flex my-3 max-w-fit mx-auto">
               {movieData?.genres.map((genre) => (
                 <Link
@@ -270,7 +272,7 @@ const MovieInfoPage = () => {
               )}
 
               {/* Display rating and budget */}
-              {movieData?.budget > 0 && (
+              {movieData?.budget && movieData?.budget > 0 && (
                 <p>Budget: ${movieData?.budget?.toLocaleString()}</p>
               )}
               {preferredReleaseDate && (
@@ -282,7 +284,7 @@ const MovieInfoPage = () => {
             </div>
             <h5 className="h3-semibold mt-6 text-dark100_light900">Overview</h5>
             <p className="my-6 p-4 overflow-auto paragraph-regular text-dark400_light800">
-              {movieData.overview}
+              {movieData?.overview}
             </p>
 
             <TopCast cast={topCast} />
@@ -292,7 +294,7 @@ const MovieInfoPage = () => {
               <WatchProviders filteredWatchProviders={filteredWatchProviders} />
             )}
             <MovieButtons
-              movieData={movieData}
+              movieData={movieData as MovieDetailsProps}
               isMovieFavorited={isMovieFavorited}
               isMovieWatchlisted={isMovieWatchlisted}
               addToFavorites={addToFavorites}
@@ -305,23 +307,24 @@ const MovieInfoPage = () => {
           </div>
         </div>
       </div>
-      {recommendationsData.results.length > 0 && (
-        <div className="my-5 md:mt-12 w-full" ref={topMoviesRef}>
-          <h3 className="h3-semibold text-dark100_light900">
-            You might also like
-          </h3>
-          {recommendationsData && (
-            <div className="my-6">
-              <MovieList movies={recommendationsData} numberOfMovies={12} />
-            </div>
-          )}
-          <Pagination
-            pageNumber={page}
-            setPage={handlePageChange}
-            totalPages={recommendationsData?.total_pages}
-          />
-        </div>
-      )}
+      {recommendationsData?.results &&
+        recommendationsData?.results?.length > 0 && (
+          <div className="my-5 md:mt-12 w-full" ref={topMoviesRef}>
+            <h3 className="h3-semibold text-dark100_light900">
+              You might also like
+            </h3>
+            {recommendationsData && (
+              <div className="my-6">
+                <MovieList movies={recommendationsData} numberOfMovies={12} />
+              </div>
+            )}
+            <Pagination
+              pageNumber={page}
+              setPage={handlePageChange}
+              totalPages={recommendationsData?.total_pages}
+            />
+          </div>
+        )}
       {/* Backdrops Dialog */}
       <Dialog
         open={isBackdropsDialogOpen} // Open state for backdrops dialog
@@ -329,9 +332,10 @@ const MovieInfoPage = () => {
       >
         <DialogContent className="max-w-[90%] md:max-w-[75%] lg:max-w-[65%] max-h-[90vh]">
           <DialogHeader>
-            <DialogTitle>{movieData.title} Wallpapers</DialogTitle>
+            <DialogTitle>{movieData?.title} Wallpapers</DialogTitle>
           </DialogHeader>
-          {movieData?.images?.backdrops?.length > 0 ? (
+          {movieData?.images?.backdrops &&
+          movieData?.images?.backdrops?.length > 0 ? (
             <div className="relative">
               <Carousel>
                 <CarouselPrevious />
@@ -362,9 +366,10 @@ const MovieInfoPage = () => {
       >
         <DialogContent className="max-w-[85%] md:max-w-[59%] lg:max-w-[28rem] 2xl:max-w-[24%] max-h-[80vh]">
           <DialogHeader>
-            <DialogTitle>{movieData.title} Posters</DialogTitle>
+            <DialogTitle>{movieData?.title} Posters</DialogTitle>
           </DialogHeader>
-          {movieData?.images?.posters?.length > 0 ? (
+          {movieData?.images?.posters &&
+          movieData?.images?.posters?.length > 0 ? (
             <div className="relative">
               <Carousel>
                 <CarouselPrevious />
@@ -390,9 +395,10 @@ const MovieInfoPage = () => {
       >
         <DialogContent className="max-w-[85%] md:max-w-[50%] max-h-[80vh]">
           <DialogHeader>
-            <DialogTitle>Watch {movieData.title} Videos</DialogTitle>
+            <DialogTitle>Watch {movieData?.title} Videos</DialogTitle>
           </DialogHeader>
-          {movieData?.videos?.results?.length > 0 ? (
+          {movieData?.videos?.results &&
+          movieData?.videos?.results?.length > 0 ? (
             <div className="relative">
               <Carousel>
                 <CarouselPrevious />
@@ -419,9 +425,10 @@ const MovieInfoPage = () => {
       >
         <DialogContent className="max-w-[95%] md:max-w-[80%] max-h-[80vh]">
           <DialogHeader>
-            <DialogTitle>Watch {movieData.title} Trailer</DialogTitle>
+            <DialogTitle>Watch {movieData?.title} Trailer</DialogTitle>
           </DialogHeader>
-          {movieData?.videos?.results?.length > 0 ? (
+          {movieData?.videos?.results &&
+          movieData?.videos?.results?.length > 0 ? (
             <iframe
               className="w-full py-4 h-64 md:h-[600px] rounded"
               title="Trailer"

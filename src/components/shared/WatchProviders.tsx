@@ -1,8 +1,8 @@
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WatchProviderProps } from "@/types";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 
 interface WatchProvidersProps {
   filteredWatchProviders: WatchProviderProps;
@@ -18,7 +18,7 @@ const WatchProviders: React.FC<WatchProvidersProps> = ({
   );
 
   return (
-    <div className="mt-10">
+    <div className="mt-12">
       <h5 className="h3-semibold mt-6 text-dark100_light900">Where to Watch</h5>
       <span className="flex small-regular">
         Powered by{" "}
@@ -58,16 +58,16 @@ const WatchProviders: React.FC<WatchProvidersProps> = ({
             {flatrate.map((provider) => (
               <div
                 key={provider.provider_id}
-                className="flex flex-col items-center mx-auto md:mx-0"
+                className="flex flex-col items-center"
               >
                 <img
                   src={`https://image.tmdb.org/t/p/w92${provider.logo_path}`}
                   alt={provider.provider_name}
                   className="rounded-lg h-16 w-16 object-cover"
                 />
-                <p className="mt-2 small-medium text-dark300_light700">
+                {/* <p className="mt-2 small-medium text-dark300_light700">
                   {provider.provider_name}
-                </p>
+                </p> */}
               </div>
             ))}
           </div>
@@ -78,16 +78,16 @@ const WatchProviders: React.FC<WatchProvidersProps> = ({
             {rent.map((provider) => (
               <div
                 key={provider.provider_id}
-                className="flex flex-col items-center mx-auto md:mx-0"
+                className="flex flex-col items-center"
               >
                 <img
                   src={`https://image.tmdb.org/t/p/w92${provider.logo_path}`}
                   alt={provider.provider_name}
                   className="rounded-lg h-16 w-16 object-cover"
                 />
-                <p className="mt-2 small-medium text-dark300_light700">
+                {/* <p className="mt-2 small-medium text-dark300_light700">
                   {provider.provider_name}
-                </p>
+                </p> */}
               </div>
             ))}
           </div>
@@ -98,16 +98,16 @@ const WatchProviders: React.FC<WatchProvidersProps> = ({
             {buy.map((provider) => (
               <div
                 key={provider.provider_id}
-                className="flex flex-col items-center mx-auto md:mx-0"
+                className="flex flex-col items-center"
               >
                 <img
                   src={`https://image.tmdb.org/t/p/w92${provider.logo_path}`}
                   alt={provider.provider_name}
                   className="rounded-lg h-16 w-16 object-cover"
                 />
-                <p className="mt-2 small-medium text-dark300_light700">
+                {/* <p className="mt-2 small-medium text-dark300_light700">
                   {provider.provider_name}
-                </p>
+                </p> */}
               </div>
             ))}
           </div>

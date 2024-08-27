@@ -9,7 +9,6 @@ import {
   scrollToElement,
 } from "@/lib/utils";
 import { useGetMoviesByActorQuery, useGetPersonQuery } from "@/services/TMDB";
-import { CastMemberProps } from "@/types";
 import { ArrowLeft, Clapperboard, Globe } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -18,13 +17,12 @@ const ActorInfoPage = () => {
   const { id } = useParams();
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
-  const { data, isFetching, isError } = useGetPersonQuery(id);
+  const { data: actorData, isFetching, isError } = useGetPersonQuery(id || "");
 
-  const actorData = data as CastMemberProps;
   // console.log("Actor Data", actorData);
 
   const { data: moviesByActorData } = useGetMoviesByActorQuery({
-    id,
+    id: id || '',
     page,
   });
   // console.log("Movies by Actor Data", moviesByActorData);
@@ -53,7 +51,7 @@ const ActorInfoPage = () => {
         <div>
           <img
             src={
-              actorData.profile_path
+              actorData?.profile_path
                 ? `https://image.tmdb.org/t/p/w500/${actorData?.profile_path}`
                 : "/assets/images/actor-placeholder.webp"
             }
@@ -64,7 +62,7 @@ const ActorInfoPage = () => {
         <div className="grid col-span-2">
           <div className="my-4 md:my-0">
             <h3 className="h1-bold mb-2 text-center">{actorData?.name}</h3>
-            {actorData.birthday && (
+            {actorData?.birthday && (
               <>
                 <p className="text-center base-medium text-dark300_light900">
                   Born {getPrettyDate(actorData?.birthday || "")}
@@ -84,7 +82,7 @@ const ActorInfoPage = () => {
                 </p>
               </>
             )}
-            {actorData.biography && (
+            {actorData?.biography && (
               <>
                 <h5 className="mt-3 h3-semibold text-dark100_light900">
                   Biography
@@ -128,7 +126,7 @@ const ActorInfoPage = () => {
         <h3 className="h3-semibold text-dark100_light900"> Top Movies</h3>
         {moviesByActorData ? (
           <div className="my-6">
-            <MovieList movies={moviesByActorData} numberOfMovies={12} />
+            <MovieList movies={moviesByActorData } numberOfMovies={12} />
           </div>
         ) : (
           <p className="text-dark400_light800">Sorry, nothing was found</p>
@@ -136,7 +134,7 @@ const ActorInfoPage = () => {
         <Pagination
           pageNumber={page}
           setPage={setPage}
-          totalPages={moviesByActorData?.total_pages}
+          totalPages={moviesByActorData?.total_pages || 1}
         />
       </div>
     </div>

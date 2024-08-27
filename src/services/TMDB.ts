@@ -1,5 +1,12 @@
 import { tmdbApiKey } from "@/lib/utils";
-import { GenreResponseProps } from "@/types"; // Make sure this path is correct
+import {
+  CastMemberProps,
+  CrewMemberProps,
+  GenreResponseProps,
+  MovieDetailsProps,
+  MovieResponseProps,
+  RecommendationsProps,
+} from "@/types"; // Make sure this path is correct
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const tmdbApi = createApi({
@@ -17,7 +24,10 @@ export const tmdbApi = createApi({
       },
     }),
 
-    getMovies: builder.query({
+    getMovies: builder.query<
+      MovieResponseProps,
+      { genreIdOrCategoryName: string; page: number; searchQuery: string }
+    >({
       query: ({ genreIdOrCategoryName, page, searchQuery }) => {
         // Get Movies by Category
         if (
@@ -42,7 +52,7 @@ export const tmdbApi = createApi({
       },
     }),
 
-    getMovie: builder.query({
+    getMovie: builder.query<MovieDetailsProps, string>({
       query: (id) =>
         `movie/${id}?append_to_response=videos,credits,images,reviews,recommendations,similar,keywords,external_ids,release_dates,&api_key=${tmdbApiKey}`,
     }),
@@ -51,20 +61,29 @@ export const tmdbApi = createApi({
       query: (id) => `movie/${id}/watch/providers?&api_key=${tmdbApiKey}`,
     }),
 
-    getRecommendations: builder.query({
+    getRecommendations: builder.query<
+      RecommendationsProps,
+      { id: string; page: number }
+    >({
       query: ({ id, page }) =>
         `movie/${id}/recommendations?api_key=${tmdbApiKey}&page=${page}`,
     }),
 
-    getPerson: builder.query({
+    getPerson: builder.query<CastMemberProps | CrewMemberProps, string>({
       query: (id) => `person/${id}?api_key=${tmdbApiKey}`,
     }),
 
-    getMoviesByActor: builder.query({
+    getMoviesByActor: builder.query<
+      MovieResponseProps,
+      { id: string; page: number }
+    >({
       query: ({ id, page }) =>
         `discover/movie?with_cast=${id}/&page=${page}&api_key=${tmdbApiKey}`,
     }),
-    getMoviesByCrewMember: builder.query({
+    getMoviesByCrewMember: builder.query<
+      MovieResponseProps,
+      { id: string; page: number }
+    >({
       query: ({ id, page }) =>
         `discover/movie?with_crew=${id}/&page=${page}&api_key=${tmdbApiKey}`,
     }),
